@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">OpenSpeechCorpus</string>
+    <string name="title_activity_upload_audio_data">Open Speech Corpus</string>
+
+    <string name="hello_world">Hola mundo!</string>
+    <string name="action_settings">Configuraciones</string>
+
+    <string name="record">Grabar</string>
+    <string name="recording">Grabando</string>
+    <string name="stop">Parar</string>
+    <string name="play">Reproducir</string>
+    <string name="send">Enviar</string>
+
+    <string name="title_activity_splash_screen">Open Speech Corpus</string>
+    <string name="powered_by_contraslash">Powered by Contraslash</string>
+    <string name="uploading_audio">Subiendo audio</string>
+    <string name="may_take_few_seconds">Esto puede tardar algunos segundos</string>
+    <string name="upload_successful">Carga de datos exitosa</string>
+
+    <string name="downloading_text">Descargando textos</string>
+    <string name="wait_please">Espere por favor</string>
+
+    <string name="failed_start_recording">Falla iniciando la grabación</string>
+
+
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam purus lorem, placerat ut nisi auctor, eleifend luctus elit. Nullam facilisis risus nec libero aliquam, a maximus ligula vestibulum. Etiam feugiat condimentum tristique. Quisque posuere at massa sed laoreet. Curabitur sed elementum urna. Morbi tincidunt est non tellus cursus placerat. Duis turpis sem, interdum a condimentum non, aliquet eget sapien. Cras ante dui, porta eget pharetra a, volutpat vel lorem. Etiam fermentum nisl in vulputate fermentum.
+        Donec blandit accumsan quam eget faucibus. Sed eu magna sit amet metus pellentesque tincidunt aliquet porttitor orci. Pellentesque mauris est, gravida nec placerat at, condimentum non nisi. Nulla eu tristique purus. Duis sagittis elit non ultrices hendrerit. Vivamus vehicula nulla eu felis semper interdum. Pellentesque suscipit dignissim nibh, sed dictum lacus convallis sed. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce at mi suscipit, dapibus lectus eget, malesuada odio. Vestibulum dictum augue eu consectetur ornare. Vivamus placerat aliquam magna, non facilisis ex. Curabitur sed ante libero. Maecenas cursus aliquet dolor id mattis. Donec ac gravida nisi. Suspendisse mollis, arcu ut tempus tristique, nulla neque pretium metus, sit amet ullamcorper velit turpis nec nibh. Donec porttitor libero ligula, id congue magna consectetur id.
+        Ut lacinia ut ante pretium venenatis. Ut sollicitudin tellus eget sem consequat hendrerit. In at accumsan sapien, sed varius leo. Nullam sed sodales eros. Aliquam condimentum sapien mollis, efficitur leo vitae, euismod leo. Proin eros arcu, tincidunt et mauris ac, pulvinar sodales risus. Sed odio enim, volutpat et mollis eget, laoreet eget ipsum. Maecenas ut aliquet elit. Phasellus nec metus cursus, sodales justo non, iaculis tortor. Sed eu urna neque.
+        Aenean dictum ultricies eros. Vestibulum iaculis quis neque sollicitudin convallis. Duis vel ipsum in nibh accumsan cursus at ut ante. Nullam non metus lacinia, viverra nisi a, rutrum nulla. Sed ac enim at diam pretium vehicula. Cras ornare consequat metus vel vulputate. Fusce volutpat commodo nisl, et convallis justo convallis et. Cras consequat nibh et eros dignissim finibus. Proin facilisis neque eu mi ultricies tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas elementum fermentum diam nec hendrerit. Nunc vehicula, sapien sed pellentesque elementum, sapien eros blandit libero, id viverra quam felis venenatis erat. Etiam sit amet pretium ligula. Cras turpis sem, mattis sit amet ligula id, placerat consectetur ipsum. Nam dapibus fermentum massa, non lacinia nibh molestie in.
+        Nullam lacus velit, dictum non mauris luctus, suscipit condimentum velit. Donec molestie eu mauris a venenatis. Nulla facilisi. Sed a elit dolor. Proin lobortis velit sed diam molestie suscipit. Nullam in lectus volutpat, aliquam erat at, tincidunt urna. In vitae neque sit amet tortor feugiat sollicitudin ut non magna. Sed at consequat dui. Vivamus mollis mauris sem, eget rutrum enim viverra vel. Ut pulvinar lectus sit amet mi aliquet, eu laoreet ipsum congue. Mauris sit amet purus tincidunt, fringilla odio at, convallis lorem. Nunc eget dui a arcu vestibulum tempus.
+    </string>
+
+    <string name="record_before_upload">Por favor grabe su voz antes de subir los datos al servidor</string>
+
+    <string name="title_activity_history">Historial</string>
+
+
+
+    <string name="history">Historial</string>
+
+    <string name="open">Abrir</string>
+    <string name="close">Cerrar</string>
+
+    <string name="title_activity_send_suggestion">Enviar </string>
+    <string name="suggestion">Sugerencia</string>
+    <string name="uploading_suggestion">Subiendo sugerencia</string>
+
+    <string name="understood">Entendido</string>
+
+    <string name="hold_to_record">Mantenga presionado para grabar</string>
+    <string name="touch_to_play">Toque para reproducir el audio</string>
+    <string name="touch_to_upload">Toque para subir el audio a nuestro servidor</string>
+    <string name="touh_to_open_menu">Abra el menú para ver mas opciones</string>
+    <string name="title_activity_my_profile">Mi Perfil</string>
+
+    <string name="nick">Apodo</string>
+    <string name="save">Guardar</string>
+
+    <string name="saving_profile">Guardando su perfil</string>
+    <string name="profile_saved">Perfil Guardado</string>
+    <string name="next">Siguiente</string>
+    <string name="my_profile">Mi Perfil</string>
+
+    <string name="custom_record">Grabación presonalizada</string>
+
+
+    <!--HTTPResponseCodeErrors-->
+    <string name="http_0">Sin Errores</string>
+    <string name="http_200">OK</string>
+    <string name="http_201">Creado</string>
+    <string name="http_202">Aceptado</string>
+    <string name="http_206">Contenido parcial</string>
+    <string name="http_400">Erorr de Usuario</string>
+    <string name="http_401">No autorizado</string>
+    <string name="http_404">No Encontrado</string>
+    <string name="http_405">Método no permitido</string>
+    <string name="http_500">Error interno del servidor</string>
+    <string name="http_999">Servidor no responde</string>
+</resources>

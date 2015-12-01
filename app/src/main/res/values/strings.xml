@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">OpenSpeechCorpus</string>
+    <string name="title_activity_upload_audio_data">Open Speech Corpus</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="record">Record</string>
+    <string name="recording">Recording</string>
+    <string name="stop">Stop</string>
+    <string name="play">Play</string>
+    <string name="send">Send</string>
+    <string name="title_activity_splash_screen">Open Speech Corpus</string>
+    <string name="powered_by_contraslash">Powered by Contraslash</string>
+    <string name="uploading_audio">Uploading Audio</string>
+    <string name="may_take_few_seconds">This may take a few seconds</string>
+    <string name="upload_successful">Upload Successful</string>
+
+    <string name="downloading_text">Downloading texts</string>
+    <string name="wait_please">Wait please</string>
+
+    <string name="failed_start_recording">Failed to start recording</string>
+
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam purus lorem, placerat ut nisi auctor, eleifend luctus elit. Nullam facilisis risus nec libero aliquam, a maximus ligula vestibulum. Etiam feugiat condimentum tristique. Quisque posuere at massa sed laoreet. Curabitur sed elementum urna. Morbi tincidunt est non tellus cursus placerat. Duis turpis sem, interdum a condimentum non, aliquet eget sapien. Cras ante dui, porta eget pharetra a, volutpat vel lorem. Etiam fermentum nisl in vulputate fermentum.
+        Donec blandit accumsan quam eget faucibus. Sed eu magna sit amet metus pellentesque tincidunt aliquet porttitor orci. Pellentesque mauris est, gravida nec placerat at, condimentum non nisi. Nulla eu tristique purus. Duis sagittis elit non ultrices hendrerit. Vivamus vehicula nulla eu felis semper interdum. Pellentesque suscipit dignissim nibh, sed dictum lacus convallis sed. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce at mi suscipit, dapibus lectus eget, malesuada odio. Vestibulum dictum augue eu consectetur ornare. Vivamus placerat aliquam magna, non facilisis ex. Curabitur sed ante libero. Maecenas cursus aliquet dolor id mattis. Donec ac gravida nisi. Suspendisse mollis, arcu ut tempus tristique, nulla neque pretium metus, sit amet ullamcorper velit turpis nec nibh. Donec porttitor libero ligula, id congue magna consectetur id.
+        Ut lacinia ut ante pretium venenatis. Ut sollicitudin tellus eget sem consequat hendrerit. In at accumsan sapien, sed varius leo. Nullam sed sodales eros. Aliquam condimentum sapien mollis, efficitur leo vitae, euismod leo. Proin eros arcu, tincidunt et mauris ac, pulvinar sodales risus. Sed odio enim, volutpat et mollis eget, laoreet eget ipsum. Maecenas ut aliquet elit. Phasellus nec metus cursus, sodales justo non, iaculis tortor. Sed eu urna neque.
+        Aenean dictum ultricies eros. Vestibulum iaculis quis neque sollicitudin convallis. Duis vel ipsum in nibh accumsan cursus at ut ante. Nullam non metus lacinia, viverra nisi a, rutrum nulla. Sed ac enim at diam pretium vehicula. Cras ornare consequat metus vel vulputate. Fusce volutpat commodo nisl, et convallis justo convallis et. Cras consequat nibh et eros dignissim finibus. Proin facilisis neque eu mi ultricies tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas elementum fermentum diam nec hendrerit. Nunc vehicula, sapien sed pellentesque elementum, sapien eros blandit libero, id viverra quam felis venenatis erat. Etiam sit amet pretium ligula. Cras turpis sem, mattis sit amet ligula id, placerat consectetur ipsum. Nam dapibus fermentum massa, non lacinia nibh molestie in.
+        Nullam lacus velit, dictum non mauris luctus, suscipit condimentum velit. Donec molestie eu mauris a venenatis. Nulla facilisi. Sed a elit dolor. Proin lobortis velit sed diam molestie suscipit. Nullam in lectus volutpat, aliquam erat at, tincidunt urna. In vitae neque sit amet tortor feugiat sollicitudin ut non magna. Sed at consequat dui. Vivamus mollis mauris sem, eget rutrum enim viverra vel. Ut pulvinar lectus sit amet mi aliquet, eu laoreet ipsum congue. Mauris sit amet purus tincidunt, fringilla odio at, convallis lorem. Nunc eget dui a arcu vestibulum tempus.
+    </string>
+
+    <string name="record_before_upload">Please record any data before upload to server</string>
+    <string name="title_activity_history">History</string>
+
+
+
+    <string name="history">History</string>
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="title_activity_send_suggestion">Send Suggestion</string>
+    <string name="suggestion">Suggestion</string>
+    <string name="uploading_suggestion">Uploading suggestion</string>
+    
+    <string name="understood">Understood</string>
+    
+    <string name="hold_to_record">Press and hold the red button to record</string>
+    <string name="touch_to_play">Touch to play your record</string>
+    <string name="touch_to_upload">Touch to upload your record to our server</string>
+    <string name="touh_to_open_menu">Open the menu to see other options</string>
+    <string name="title_activity_my_profile">My Profile</string>
+    
+    <string name="nick">Nick</string>
+    <string name="save">Save</string>
+
+    <string name="saving_profile">Saving your profile</string>
+    <string name="profile_saved">Profile saved</string>
+    <string name="next">Next</string>
+    <string name="my_profile">My Profile</string>
+
+    <string name="custom_record">Custom Record</string>
+
+
+    <!--HTTPResponseCodeErrors-->
+    <string name="http_0">No errors</string>
+    <string name="http_200">OK</string>
+    <string name="http_201">Created</string>
+    <string name="http_202">Accepted</string>
+    <string name="http_206">PartialContent</string>
+    <string name="http_400">User Error</string>
+    <string name="http_401">Not authorized</string>
+    <string name="http_404">Not found</string>
+    <string name="http_405">Method not allowed</string>
+    <string name="http_500">Internal Server Error</string>
+    <string name="http_999">Time limit exceeded</string>
+    <string name="title_activity_author_list">Author List</string>
+    <string name="title_activity_tales_list">Tales List</string>
+</resources>

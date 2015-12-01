@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.contraslash.android.openspeechcorpus.apps.core.activities.UploadAudioData">
+
+
+    <android.support.v7.widget.Toolbar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/upload_custom_audio_data_toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_below="@id/upload_custom_audio_data_toolbar">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/max_heigth_text_tale_box"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/margin_lateral_bigger"
+                android:layout_marginRight="@dimen/margin_lateral_bigger">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:id="@+id/upload_custom_audio_data_tale_text"
+                    android:layout_margin="@dimen/margin_lateral_default"
+                    android:textSize="@dimen/font_size_medium"
+
+                    />
+
+            </ScrollView>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6">
+            <com.contraslash.android.openspeechcorpus.apps.core.animations.CircleView
+                android:layout_width="@dimen/circle_animation_canvas_view_size"
+                android:layout_height="@dimen/circle_animation_canvas_view_size"
+                android:id="@+id/upload_custom_audio_data_circle_view"
+                android:layout_centerInParent="true"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/record"
+                android:textColor="@color/white"
+                android:layout_centerInParent="true"
+                android:id="@+id/upload_custom_audio_data_recording_text"
+                />
+        </RelativeLayout>
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            style="?android:buttonBarButtonStyle"
+            >
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_play_arrow_black_18dp"
+                android:id="@+id/upload_custom_audio_data_play_button"
+                style="?android:buttonBarButtonStyle"
+                android:contentDescription="@string/play"/>
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_cloud_upload_black_18dp"
+                android:id="@+id/upload_custom_audio_data_send_button"
+                style="?android:buttonBarButtonStyle"
+                android:contentDescription="@string/send"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

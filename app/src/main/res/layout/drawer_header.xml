@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/alto_drawer_header"
+    android:background="@color/black"
+    android:gravity="center"
+    >
+
+    <ImageView
+        android:layout_width="@dimen/tam_imagen_drawer_header"
+        android:layout_height="@dimen/tam_imagen_drawer_header"
+        android:background="@drawable/ops_full_512x512_white"
+        android:gravity="center"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="center"-->
+        <!--android:textColor="@color/blanco"-->
+        <!--android:id="@+id/drawer_header_nombre"-->
+        <!--android:text="@string/juan_perez"/>-->
+
+</LinearLayout>

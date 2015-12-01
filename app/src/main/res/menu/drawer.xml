@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_drawer_record"
+            android:icon="@drawable/ic_mic_black_18dp"
+            android:title="@string/record"/>
+        <item
+            android:id="@+id/menu_drawer_custom_record"
+            android:icon="@drawable/ic_surround_sound_18pt_3x"
+            android:title="@string/custom_record"/>
+        <item
+            android:id="@+id/menu_drawer_history"
+            android:icon="@drawable/ic_history_black_18dp"
+            android:title="@string/history"/>
+
+        <item
+            android:id="@+id/menu_drawer_suggestion"
+            android:icon="@drawable/ic_event_note_18pt_3x"
+            android:title="@string/suggestion"/>
+        <item
+            android:id="@+id/menu_drawer_profile"
+            android:icon="@drawable/ic_account_box_18pt_3x"
+            android:title="@string/my_profile"/>
+    </group>
+</menu>

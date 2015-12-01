@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.contraslash.android.openspeechcorpus.apps.suggestions.activities.SendSuggestion"
+    android:orientation="vertical"
+    >
+
+    <android.support.v7.widget.Toolbar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/send_suggestion_toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_margin="@dimen/margin_lateral_default"
+        android:orientation="vertical">
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/suggestion"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/heigth_suggestion_box"
+            android:gravity="start"
+            android:id="@+id/send_suggestion_text"/>
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_send_black_18dp"
+            style="?android:buttonBarButtonStyle"
+            android:id="@+id/send_suggestion_send_button"/>
+    </LinearLayout>
+
+</LinearLayout>
