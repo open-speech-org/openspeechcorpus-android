@@ -1,9 +1,6 @@
 package com.contraslash.android.openspeechcorpus.apps.authentication.activities;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.contraslash.android.openspeechcorpus.R;
 import com.contraslash.android.openspeechcorpus.apps.core.activities.UploadAudioData;
@@ -18,7 +15,7 @@ public class SplashScreen extends BaseActivity {
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                cambiarDeActividad(UploadAudioData.class);
+                changeActivity(UploadAudioData.class);
             }
         }, 2000);
 
@@ -30,12 +27,12 @@ public class SplashScreen extends BaseActivity {
     }
 
     @Override
-    protected void mapearGUI() {
+    protected void mapGUI() {
 
     }
 
     @Override
-    protected void cargarEventos() {
+    protected void loadEvents() {
 
     }
 

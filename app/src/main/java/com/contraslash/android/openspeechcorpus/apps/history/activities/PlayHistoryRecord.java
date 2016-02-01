@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.contraslash.android.openspeechcorpus.R;
 import com.contraslash.android.openspeechcorpus.base.BaseActivity;
@@ -58,7 +59,7 @@ public class PlayHistoryRecord extends BaseActivity {
     }
 
     @Override
-    protected void mapearGUI() {
+    protected void mapGUI() {
         toolbar = (Toolbar)findViewById(R.id.play_history_record_toolbar);
 
         recordedText = (TextView)findViewById(R.id.play_history_record_text);
@@ -68,7 +69,7 @@ public class PlayHistoryRecord extends BaseActivity {
     }
 
     @Override
-    protected void cargarEventos() {
+    protected void loadEvents() {
 
         setSupportActionBar(toolbar);
 
@@ -113,6 +114,8 @@ public class PlayHistoryRecord extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG, "prepare() failed");
+            Toast.makeText(this,R.string.record_does_not_exist,Toast.LENGTH_SHORT).show();
+            playButton.setImageResource(R.drawable.ic_play_arrow_black_18dp);
         }
     }
 

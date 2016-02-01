@@ -2,6 +2,8 @@ package com.contraslash.android.openspeechcorpus.apps.core.activities;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
@@ -15,13 +17,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +44,18 @@ import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleView;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioData;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioDataDAO;
 import com.contraslash.android.openspeechcorpus.apps.history.activities.History;
+import com.contraslash.android.openspeechcorpus.apps.history.dialogs.EraseDialog;
+import com.contraslash.android.openspeechcorpus.apps.miscellany.models.Command;
+import com.contraslash.android.openspeechcorpus.apps.miscellany.models.CommandDAO;
+import com.contraslash.android.openspeechcorpus.apps.news.activities.NewsDetail;
+import com.contraslash.android.openspeechcorpus.apps.news.adapters.NewAdapter;
+import com.contraslash.android.openspeechcorpus.apps.news.models.New;
+import com.contraslash.android.openspeechcorpus.apps.news.models.NewDAO;
 import com.contraslash.android.openspeechcorpus.apps.profile.activities.MyProfile;
+import com.contraslash.android.openspeechcorpus.apps.profile.activities.RankingList;
+import com.contraslash.android.openspeechcorpus.apps.profile.dialogs.FillNick;
 import com.contraslash.android.openspeechcorpus.apps.suggestions.activities.SendSuggestion;
+import com.contraslash.android.openspeechcorpus.apps.tales.activities.AuthorList;
 import com.contraslash.android.openspeechcorpus.base.BaseActivity;
 import com.contraslash.android.openspeechcorpus.config.Config;
 
@@ -49,8 +65,14 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
@@ -89,11 +111,24 @@ public class UploadAudioData extends BaseActivity implements
 
     TextView helperMenu;
 
+    LinearLayout layoutHeader;
+
+    ListView newsListView;
+    NewAdapter newAdapter;
+    NewDAO newDAO;
+    ArrayList<New> news;
+
     //End of GUI Elements
 
     AudioDataDAO audioDataDAO;
     ArrayList<AudioData> records;
     AudioData record;
+
+    CommandDAO commandDAO;
+    ArrayList<Command> commands;
+    Command command;
+
+    boolean isRecordingCommand;
 
 
     boolean newUserRequested = false;
@@ -114,12 +149,23 @@ public class UploadAudioData extends BaseActivity implements
 
         super.onCreate(savedInstanceState);
 
-        //getPreferencias().edit().putInt(Config.USER_ID,11).apply();
+        //getPreferences().edit().putInt(Config.USER_ID,12312).apply();
 
-        if(!getPreferencias().getBoolean(Config.SPLASH_SCREEN_SHOWED,false))
+        if(!getPreferences().getBoolean(Config.SPLASH_SCREEN_SHOWED,false))
         {
-            getPreferencias().edit().putBoolean(Config.SPLASH_SCREEN_SHOWED,true).apply();
-            cambiarDeActividad(SplashScreen.class);
+            getPreferences().edit().putBoolean(Config.SPLASH_SCREEN_SHOWED,true).apply();
+            changeActivity(SplashScreen.class);
+        }
+
+        Log.i(TAG, "Username: "+getPreferences().getString(Config.ANONYMOUS_USER_NAME,""));
+        Log.i(TAG, "NAME: REQUESTED: "+getPreferences().getBoolean(Config.NAME_REQUESTED,false));
+
+        if(
+                getPreferences().getString(Config.ANONYMOUS_USER_NAME,"").isEmpty() &&
+                !getPreferences().getBoolean(Config.NAME_REQUESTED,false))
+        {
+            FillNick fillNick = new FillNick();
+            fillNick.show(getFragmentManager(), Config.FILL_NICK_DIAGLO_TAG);
         }
 
 
@@ -127,7 +173,13 @@ public class UploadAudioData extends BaseActivity implements
         records = audioDataDAO.readAll();
         configureRecord(getRecord());
 
+        commandDAO = new CommandDAO(this);
+        commands = commandDAO.all();
+        //configureCommandRecord(getCommandRecord());
+        isRecordingCommand = false;
+
         //deleteAllNotUploaded();
+
 
         show_tutorial();
 
@@ -136,28 +188,29 @@ public class UploadAudioData extends BaseActivity implements
     private void show_tutorial()
     {
         ShowcaseConfig config = new ShowcaseConfig();
-        config.setDelay(500); // half second between each showcase view
+        config.setDelay(250); // half second between each showcase view
 
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, Config.SHOW_TUTORIAL);
+
 
         sequence.setConfig(config);
 
         sequence.addSequenceItem(
                 circle,
                 getString(R.string.hold_to_record),
-                getString(R.string.understood)
+                getString(R.string.next)
         );
 
         sequence.addSequenceItem(
                 playButton,
                 getString(R.string.touch_to_play),
-                getString(R.string.understood)
+                getString(R.string.next)
         );
 
         sequence.addSequenceItem(
                 sendButton,
                 getString(R.string.touch_to_upload),
-                getString(R.string.understood)
+                getString(R.string.next)
         );
 
         sequence.addSequenceItem(
@@ -221,6 +274,8 @@ public class UploadAudioData extends BaseActivity implements
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG, "prepare() failed");
+            playButton.setImageResource(R.drawable.ic_play_arrow_black_18dp);
+            mStartRecording = !mStartRecording;
         }
     }
 
@@ -300,7 +355,7 @@ public class UploadAudioData extends BaseActivity implements
     }
 
     @Override
-    protected void mapearGUI()
+    protected void mapGUI()
     {
         toolbar = (Toolbar)findViewById(R.id.upload_audio_data_toolbar);
         setSupportActionBar(toolbar);
@@ -329,11 +384,22 @@ public class UploadAudioData extends BaseActivity implements
 
         // listen for navigation events
         NavigationView navigationView = (NavigationView) findViewById(R.id.upload_audio_data_navigation);
-//        LayoutInflater inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        LinearLayout layoutHeader = (LinearLayout) inflater.inflate(R.layout.drawer_header, null);
-//        TextView nombre = (TextView)layoutHeader.findViewById(R.id.drawer_header_nombre);
-//        nombre.setText(getPreferencias().getString("nombre", "Yo"));
-//        navigationView.addHeaderView(layoutHeader);
+        LayoutInflater inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutHeader = (LinearLayout) inflater.inflate(R.layout.drawer_header, null);
+        TextView nombre = (TextView)layoutHeader.findViewById(R.id.drawer_header_nombre);
+        nombre.setText(getPreferences().getString(Config.ANONYMOUS_USER_NAME, "Yo"));
+        CircleImageView profileImage = (CircleImageView) layoutHeader.findViewById(R.id.drawer_header_profile_image);
+        File imgFile = new  File(getPreferences().getString(Config.ANONYMOUS_USER_PICTURE,""));
+        Log.i(TAG, "Picture PATH: " + getPreferences().getString(Config.ANONYMOUS_USER_PICTURE, ""));
+
+        if(imgFile.exists()){
+            Log.i(TAG,"Path Exists");
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+            profileImage.setImageBitmap(myBitmap);
+
+        }
+        navigationView.addHeaderView(layoutHeader);
         navigationView.setNavigationItemSelectedListener(this);
 
         // select the correct nav menu item
@@ -360,16 +426,68 @@ public class UploadAudioData extends BaseActivity implements
         mDrawerToggle.syncState();
 
         navigate(mNavItemId);
+
+        newDAO = new NewDAO(this);
+        newsListView = (ListView)findViewById(R.id.upload_audio_data_notification_list);
+
+//        news = newDAO.all();
+//        for(New a:news)
+//        {
+//            Log.i(TAG, "ID:" + a.get_id());
+//            newDAO.delete(a);
+//        }
+        news = newDAO.all();
+
+        if(news.isEmpty())
+        {
+            Log.i(TAG,"News is empty");
+            New newNew = new New(
+                    getString(R.string.notification_1_title),
+                    getString(R.string.notification_1_body));
+            newNew.set_id(1);
+            newDAO.create(newNew);
+            news.add(newNew);
+        }
+        else
+        {
+            Log.i(TAG,"News NO is empty");
+        }
+//        New newNew = new New(
+//            "Titulo 1",
+//            "cuerpo 2");
+//        newDAO.create(newNew);
+//        news.add(newNew);
+        newAdapter = new NewAdapter(this,R.layout.element_new,news);
+        newsListView.setAdapter(newAdapter);
+
+        if (isAfterLastUpdate(Config.NEWS_LAST_UPDATE))
+        {
+            int maxNewId = -1;
+            for(New newObject:news)
+            {
+                if(newObject.get_id()>maxNewId)
+                {
+                    maxNewId = newObject.get_id();
+                }
+            }
+            Log.i(TAG,"DATE AFTER LAST UPDATE");
+            getNotificationsfromServer(maxNewId);
+            getPreferences().edit().putString(Config.NEWS_LAST_UPDATE, getSimpleTodayString()).apply();
+        }
+        else
+        {
+            Log.i(TAG,"DATE NOT AFTER LAST UPDATE");
+        }
+
+
+
+
     }
 
     @Override
-    protected void cargarEventos()
+    protected void loadEvents()
     {
-
-
-
         getSupportActionBar().getThemedContext();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -417,17 +535,49 @@ public class UploadAudioData extends BaseActivity implements
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadData();
+                if(isRecordingCommand)
+                {
+                    uploadCommandData();
+                }
+                else
+                {
+                    uploadData();
+                }
+
             }
         });
 
         changeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                record.setUploaded(2);
-                audioDataDAO.update(record);
-                configureRecord(getRecord());
+                if(isRecordingCommand)
+                {
+                    command.setUploaded(2);
+                    commandDAO.update(command);
+                    configureCommandRecord(getCommandRecord());
+                }
+                else
+                {
+                    record.setUploaded(2);
+                    audioDataDAO.update(record);
+                    configureRecord(getRecord());
+                }
 
+            }
+        });
+
+        layoutHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(MyProfile.class);
+            }
+        });
+        newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(Config.NEW_ID,news.get(position).get_id());
+                changeActivity(NewsDetail.class,bundle);
             }
         });
     }
@@ -438,8 +588,8 @@ public class UploadAudioData extends BaseActivity implements
         if(canUpload) {
             ArrayList<HttpParameter> parameters = new ArrayList<>();
             parameters.add(new HttpParameter("tale_sentence_id", record.getSentence_id() + ""));
-            if (getPreferencias().getInt(Config.USER_ID, -1) > 0) {
-                parameters.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferencias().getInt(Config.USER_ID, 1) + ""));
+            if (getPreferences().getInt(Config.USER_ID, -1) > 0) {
+                parameters.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferences().getInt(Config.USER_ID, 1) + ""));
             }
 
             ArrayList<MultipartParameter> multiparPatameters = new ArrayList<>();
@@ -486,6 +636,61 @@ public class UploadAudioData extends BaseActivity implements
     }
 
 
+    private void uploadCommandData()
+    {
+
+        if(canUpload) {
+            ArrayList<HttpParameter> parameters = new ArrayList<>();
+            parameters.add(new HttpParameter("command_id", command.getCommandId() + ""));
+            if (getPreferences().getInt(Config.USER_ID, -1) > 0) {
+                parameters.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferences().getInt(Config.USER_ID, 1) + ""));
+            }
+
+            ArrayList<MultipartParameter> multiparPatameters = new ArrayList<>();
+            multiparPatameters.add(new MultipartParameter("audio", mFileName, "video/mp4"));
+
+            HttpConnectionMultipart uploadAudio = new HttpConnectionMultipart(
+                    this,
+                    Config.BASE_URL + Config.API_BASE_URL + "/commands/upload/",
+                    null,
+                    parameters,
+                    multiparPatameters,
+                    HttpConnection.POST,
+                    new OnServerResponse() {
+                        @Override
+                        public void ConexionExitosa(int codigoRespuesta, String respuesta) {
+
+                            Toast.makeText(UploadAudioData.this, UploadAudioData.this.getResources().getString(R.string.upload_successful), Toast.LENGTH_SHORT).show();
+                            command.setUploaded(1);
+                            commandDAO.update(command);
+                            configureCommandRecord(getCommandRecord());
+                        }
+
+                        @Override
+                        public void ConexionFallida(int codigoRespuesta) {
+                            new Util(UploadAudioData.this).mostrarErrores(codigoRespuesta);
+                        }
+
+                        @Override
+                        public void MalaParametrizacion() {
+                            Log.i(TAG, "Bad Parametriation");
+                        }
+                    }
+            );
+
+            uploadAudio.initDialog(getResources().getString(R.string.uploading_audio), getResources().getString(R.string.may_take_few_seconds));
+            uploadAudio.setDialogCancelable(false);
+            uploadAudio.setShowDialog(true);
+            uploadAudio.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        else
+        {
+            Toast.makeText(this,getResources().getString(R.string.record_before_upload), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
     private void configureRecord(AudioData record)
     {
         if(record != null)
@@ -515,6 +720,79 @@ public class UploadAudioData extends BaseActivity implements
         canUpload = false;
     }
 
+    private void configureCommandRecord(Command record)
+    {
+        if(record != null)
+        {
+            taleText.setText(record.getText());
+            mFileName = dirPath + "/command_" + record.getCommandId() + ".mp4";
+            record.setFileLocation(mFileName);
+
+            Log.i(TAG, mFileName);
+
+            commandDAO.update(record);
+
+            this.command = record;
+        }
+        else
+        {
+            int offset=0;
+            for(Command lastRecord:commands)
+            {
+                if(lastRecord.getCommandId()>offset)
+                {
+                    offset=lastRecord.getCommandId();
+                }
+            }
+
+            if (isAfterLastUpdate(Config.COMMANDS_LAST_UPDATE))
+            {
+                Log.i(TAG,"DATE AFTER LAST UPDATE");
+                getCommandsFromServer(offset);
+                getPreferences().edit().putString(Config.COMMANDS_LAST_UPDATE, getSimpleTodayString()).apply();
+            }
+            else
+            {
+                Log.i(TAG,"DATE NOT AFTER LAST UPDATE");
+            }
+        }
+        canUpload = false;
+    }
+
+
+    private boolean isAfterLastUpdate(String preferencesKey)
+    {
+        String commandsLastUpdate = getPreferences().getString(preferencesKey,"2016-01-01");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try{
+            Date dateLastUpdate = format.parse(commandsLastUpdate);
+            Log.i(TAG, "DATE LAST UPDATE: " + format.format(dateLastUpdate));
+            Date today = getToday();
+            Log.i(TAG, "TODAY: " + format.format(today));
+            return today.after(dateLastUpdate);
+        }catch (ParseException pse)
+        {
+            pse.printStackTrace();
+        }
+        return false;
+    }
+
+    private Date getToday()
+    {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTime();
+    }
+
+    private String getSimpleTodayString()
+    {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(getToday());
+    }
+
     private void parseData(String json)
     {
         try
@@ -523,7 +801,7 @@ public class UploadAudioData extends BaseActivity implements
             {
                 JSONObject response = new JSONObject(json);
                 int userId = response.getInt(Config.ANONYMOUS_USER);
-                getPreferencias().edit().putInt(Config.USER_ID,userId).apply();
+                getPreferences().edit().putInt(Config.USER_ID,userId).apply();
                 json = response.getString("sentences");
             }
             JSONArray sentences = new JSONArray(json);
@@ -542,6 +820,55 @@ public class UploadAudioData extends BaseActivity implements
         }
     }
 
+    private void parseCommandData(String json)
+    {
+        try
+        {
+            if(newUserRequested)
+            {
+                JSONObject response = new JSONObject(json);
+                int userId = response.getInt(Config.ANONYMOUS_USER);
+                getPreferences().edit().putInt(Config.USER_ID,userId).apply();
+                json = response.getString("sentences");
+            }
+            JSONArray sentences = new JSONArray(json);
+            for(int i=0;i<sentences.length();i++)
+            {
+                JSONObject sentence = sentences.getJSONObject(i);
+                Log.i(TAG, sentence.toString());
+                Command record = new Command(sentence.getInt("id"),sentence.getString("text"),"",0);
+                commandDAO.create(record);
+                commands.add(record);
+
+            }
+        }catch (JSONException jse)
+        {
+            jse.printStackTrace();
+        }
+    }
+
+    private void parseNotification(String json)
+    {
+        try
+        {
+            JSONArray sentences = new JSONArray(json);
+            for(int i=0;i<sentences.length();i++)
+            {
+                JSONObject newString = sentences.getJSONObject(i);
+                Log.i(TAG, newString.toString());
+                New newNew = new New(newString.getString("title"),newString.getString("body"));
+                newNew.set_id(newString.getInt("id"));
+                newDAO.create(newNew);
+                news.add(newNew);
+
+            }
+        }catch (JSONException jse)
+        {
+            jse.printStackTrace();
+        }
+    }
+
+
     private AudioData getRecord()
     {
         AudioData emptyRecord= null;
@@ -557,10 +884,25 @@ public class UploadAudioData extends BaseActivity implements
         return emptyRecord;
     }
 
+    private Command getCommandRecord()
+    {
+        Command emptyRecord= null;
+        for(Command record:commands)
+        {
+            if(record.getFileLocation().isEmpty() || record.getUploaded() == 0)
+            {
+                emptyRecord=record;
+                break;
+            }
+        }
+
+        return emptyRecord;
+    }
+
     private void getRecordsFromServer(int offset)
     {
         String path = "/sentences/?offset="+offset;
-        if(getPreferencias().getInt(Config.USER_ID,-1)<0)
+        if(getPreferences().getInt(Config.USER_ID,-1)<0)
         {
             newUserRequested=true;
             path+="&new_user=true";
@@ -600,6 +942,98 @@ public class UploadAudioData extends BaseActivity implements
         getTaleText.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getCommandsFromServer(int offset)
+    {
+        String path = "/commands/list/?offset="+offset;
+        if(getPreferences().getInt(Config.USER_ID,-1)<0)
+        {
+            newUserRequested=true;
+            path+="&new_user=true";
+        }
+        HttpConnection getTaleText = new HttpConnection(
+                this,
+                Config.BASE_URL + Config.API_BASE_URL + path,
+                new ArrayList<HttpParameter>(),
+                new ArrayList<HttpParameter>(),
+                HttpConnection.GET,
+                new OnServerResponse() {
+                    @Override
+                    public void ConexionExitosa(int codigoRespuesta, String respuesta) {
+                        if(respuesta.compareTo("[]")==0)
+                        {
+                            configureRecord(getRecord());
+                            isRecordingCommand = false;
+                        }
+                        else
+                        {
+                            parseCommandData(respuesta);
+                            Command record = getCommandRecord();
+                            configureCommandRecord(record);
+                        }
+                    }
+
+                    @Override
+                    public void ConexionFallida(int codigoRespuesta) {
+                        new Util(UploadAudioData.this).mostrarErrores(codigoRespuesta);
+                    }
+
+                    @Override
+                    public void MalaParametrizacion() {
+
+                    }
+                }
+        );
+
+        getTaleText.initDialog(getResources().getString(R.string.downloading_text), getResources().getString(R.string.wait_please));
+
+        getTaleText.setShowDialog(true);
+
+        getTaleText.setDialogCancelable(false);
+
+        getTaleText.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getNotificationsfromServer(int offset)
+    {
+        Log.i(TAG, "GETTING Notifications from server");
+        String path = "/news/all/?offset="+offset;
+        HttpConnection getTaleText = new HttpConnection(
+                this,
+                Config.BASE_URL + Config.API_BASE_URL + path,
+                new ArrayList<HttpParameter>(),
+                new ArrayList<HttpParameter>(),
+                HttpConnection.GET,
+                new OnServerResponse() {
+                    @Override
+                    public void ConexionExitosa(int codigoRespuesta, String respuesta) {
+                        if(respuesta.compareTo("[]")!=0)
+                        {
+                            parseNotification(respuesta);
+                        }
+
+                    }
+
+                    @Override
+                    public void ConexionFallida(int codigoRespuesta) {
+                        new Util(UploadAudioData.this).mostrarErrores(codigoRespuesta);
+                    }
+
+                    @Override
+                    public void MalaParametrizacion() {
+
+                    }
+                }
+        );
+
+        getTaleText.initDialog(getResources().getString(R.string.downloading_text), getResources().getString(R.string.wait_please));
+
+        getTaleText.setShowDialog(false);
+
+        getTaleText.setDialogCancelable(false);
+
+        getTaleText.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public boolean onNavigationItemSelected(final MenuItem menuItem) {
         // update highlighted item in the navigation menu
@@ -621,17 +1055,27 @@ public class UploadAudioData extends BaseActivity implements
     private void navigate(final int itemId) {
         // perform the actual navigation logic, updating the main content fragment etc
         switch (itemId) {
+            case R.id.menu_drawer_ranking_position:
+                changeActivity(RankingList.class);
+                break;
             case R.id.menu_drawer_custom_record:
-                cambiarDeActividad(UploadCustomAudioData.class);
+                changeActivity(UploadCustomAudioData.class);
                 break;
             case R.id.menu_drawer_history:
-                cambiarDeActividad(History.class);
+                changeActivity(History.class);
                 break;
             case R.id.menu_drawer_suggestion:
-                cambiarDeActividad(SendSuggestion.class);
+                changeActivity(SendSuggestion.class);
                 break;
-            case R.id.menu_drawer_profile:
-                cambiarDeActividad(MyProfile.class);
+//            case R.id.menu_drawer_profile:
+//                changeActivity(MyProfile.class);
+//                break;
+            case R.id.menu_drawer_tales:
+                changeActivity(AuthorList.class);
+                break;
+            case R.id.menu_drawer_erase:
+                EraseDialog eraseDialog = new EraseDialog();
+                eraseDialog.show(getFragmentManager(),Config.ERASE_DIALOG_TAG);
                 break;
         }
     }
@@ -647,6 +1091,12 @@ public class UploadAudioData extends BaseActivity implements
         if (item.getItemId() == android.support.v7.appcompat.R.id.home) {
             return mDrawerToggle.onOptionsItemSelected(item);
         }
+        switch (item.getItemId())
+        {
+            case R.id.menu_upload_audio_data_notifications:
+                mDrawerLayout.openDrawer(GravityCompat.END);
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -660,6 +1110,8 @@ public class UploadAudioData extends BaseActivity implements
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else if(mDrawerLayout.isDrawerOpen(GravityCompat.END)){
+            mDrawerLayout.closeDrawer(GravityCompat.END);
         } else {
             super.onBackPressed();
         }
@@ -670,5 +1122,12 @@ public class UploadAudioData extends BaseActivity implements
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_upload_audio_data, menu);
+        return true;
     }
 }

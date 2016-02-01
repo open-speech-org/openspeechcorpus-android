@@ -5,19 +5,30 @@
     android:layout_height="@dimen/alto_drawer_header"
     android:background="@color/black"
     android:gravity="center"
+    android:focusable="true"
+    android:paddingTop="@dimen/margin_top_header"
     >
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/drawer_header_profile_image"
         android:layout_width="@dimen/tam_imagen_drawer_header"
         android:layout_height="@dimen/tam_imagen_drawer_header"
-        android:background="@drawable/ops_full_512x512_white"
-        android:gravity="center"/>
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:gravity="center"-->
-        <!--android:textColor="@color/blanco"-->
-        <!--android:id="@+id/drawer_header_nombre"-->
-        <!--android:text="@string/juan_perez"/>-->
+        android:src="@drawable/ops_full_512x512_white"
+        android:contentDescription="@string/my_profile"
+        android:gravity="center"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FF000000"
+        android:focusable="false"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:id="@+id/drawer_header_nombre"
+        android:focusable="false"
+        />
 
 </LinearLayout>

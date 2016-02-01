@@ -7,7 +7,9 @@
 
     <dimen name="margin_lateral_default">20dp</dimen>
     <dimen name="margin_lateral_bigger">40dp</dimen>
+    <dimen name="margin_top_header">40dp</dimen>
 
+    <dimen name="font_size_big">25sp</dimen>
     <dimen name="font_size_medium">18sp</dimen>
 
     <dimen name="font_size_small">16dp</dimen>
@@ -20,15 +22,20 @@
 
     <dimen name="alto_drawer_header">150dp</dimen>
 
-    <dimen name="tam_imagen_drawer_header">150dp</dimen>
+    <dimen name="tam_imagen_drawer_header">100dp</dimen>
 
     <dimen name="heigth_suggestion_box">250dp</dimen>
 
     <dimen name="toolbar_heigth">60dp</dimen>
 
     <dimen name="tam_profile_image">150dp</dimen>
-    
+
     <dimen name="height_biography_text">100dp</dimen>
-    
-    
+
+    <dimen name="height_ranking_position">40dp</dimen>
+    <dimen name="height_title_ranking_position">60dp</dimen>
+
+    <dimen name="width_notification_panel">250dp</dimen>
+
+
 </resources>

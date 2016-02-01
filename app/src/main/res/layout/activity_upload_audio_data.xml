@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:minHeight="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:theme="@style/ThemeOverlay.AppCompat.Light"
             />
 
         <LinearLayout
@@ -125,8 +125,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/white"
-        app:headerLayout="@layout/drawer_header"
         app:itemIconTint="@color/black"
         app:itemTextColor="@color/black"
         app:menu="@menu/drawer"/>
+    <ListView
+        android:layout_width="@dimen/width_notification_panel"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@color/white"
+        android:id="@+id/upload_audio_data_notification_list"/>
 </android.support.v4.widget.DrawerLayout>

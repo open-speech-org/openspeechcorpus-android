@@ -1,10 +1,7 @@
 package com.contraslash.android.openspeechcorpus.apps.history.activities;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,7 +14,6 @@ import com.contraslash.android.openspeechcorpus.base.BaseActivity;
 import com.contraslash.android.openspeechcorpus.config.Config;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class History extends BaseActivity {
 
@@ -41,7 +37,7 @@ public class History extends BaseActivity {
     }
 
     @Override
-    protected void mapearGUI() {
+    protected void mapGUI() {
         toolbar = (Toolbar)findViewById(R.id.history_toolbar);
 
         historyListView = (ListView)findViewById(R.id.history_list_view);
@@ -50,7 +46,7 @@ public class History extends BaseActivity {
     }
 
     @Override
-    protected void cargarEventos() {
+    protected void loadEvents() {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -69,7 +65,7 @@ public class History extends BaseActivity {
                 Bundle bundle=new Bundle();
                 bundle.putString(Config.FILE_TO_PLAY,historyAdapter.getItem(position).getFileLocation());
                 bundle.putString(Config.TEXT_IN_FILE,historyAdapter.getItem(position).getSentence_text());
-                History.this.cambiarDeActividad(PlayHistoryRecord.class,bundle);
+                History.this.changeActivity(PlayHistoryRecord.class, bundle);
             }
         });
 

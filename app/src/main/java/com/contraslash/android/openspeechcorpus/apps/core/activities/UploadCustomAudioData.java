@@ -1,25 +1,17 @@
 package com.contraslash.android.openspeechcorpus.apps.core.activities;
 
-import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,22 +27,12 @@ import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleAnima
 import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleView;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioData;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioDataDAO;
-import com.contraslash.android.openspeechcorpus.apps.history.activities.History;
-import com.contraslash.android.openspeechcorpus.apps.profile.activities.MyProfile;
-import com.contraslash.android.openspeechcorpus.apps.suggestions.activities.SendSuggestion;
 import com.contraslash.android.openspeechcorpus.base.BaseActivity;
 import com.contraslash.android.openspeechcorpus.config.Config;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class UploadCustomAudioData extends BaseActivity{
 //public class UploadAudioData extends Activity {
@@ -96,12 +78,12 @@ public class UploadCustomAudioData extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //getPreferencias().edit().putInt(Config.USER_ID,11).apply();
+        //getPreferences().edit().putInt(Config.USER_ID,11).apply();
 
-        if(!getPreferencias().getBoolean(Config.SPLASH_SCREEN_SHOWED,false))
+        if(!getPreferences().getBoolean(Config.SPLASH_SCREEN_SHOWED,false))
         {
-            getPreferencias().edit().putBoolean(Config.SPLASH_SCREEN_SHOWED,true).apply();
-            cambiarDeActividad(SplashScreen.class);
+            getPreferences().edit().putBoolean(Config.SPLASH_SCREEN_SHOWED,true).apply();
+            changeActivity(SplashScreen.class);
         }
 
         audioDataDAO=new AudioDataDAO(this);
@@ -143,6 +125,8 @@ public class UploadCustomAudioData extends BaseActivity{
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG, "prepare() failed");
+            playButton.setImageResource(R.drawable.ic_play_arrow_black_18dp);
+            mStartRecording = !mStartRecording;
         }
     }
 
@@ -222,7 +206,7 @@ public class UploadCustomAudioData extends BaseActivity{
     }
 
     @Override
-    protected void mapearGUI()
+    protected void mapGUI()
     {
         toolbar = (Toolbar)findViewById(R.id.upload_custom_audio_data_toolbar);
         setSupportActionBar(toolbar);
@@ -243,7 +227,7 @@ public class UploadCustomAudioData extends BaseActivity{
     }
 
     @Override
-    protected void cargarEventos()
+    protected void loadEvents()
     {
 
 
@@ -310,8 +294,8 @@ public class UploadCustomAudioData extends BaseActivity{
         if(canUpload) {
             ArrayList<HttpParameter> parameters = new ArrayList<>();
             parameters.add(new HttpParameter(Config.TEXT, text.getText()+ ""));
-            if (getPreferencias().getInt(Config.USER_ID, -1) > 0) {
-                parameters.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferencias().getInt(Config.USER_ID, 1) + ""));
+            if (getPreferences().getInt(Config.USER_ID, -1) > 0) {
+                parameters.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferences().getInt(Config.USER_ID, 1) + ""));
             }
 
             ArrayList<MultipartParameter> multiparPatameters = new ArrayList<>();

@@ -29,10 +29,7 @@ public class AudioData extends Table {
         this.uploaded=uploaded;
     }
 
-    public void set_id(int id)
-    {
-        this._id=id;
-    }
+
 
 
 
@@ -68,10 +65,7 @@ public class AudioData extends Table {
         this.fileLocation = fileLocation;
     }
 
-    public int get_id()
-    {
-        return this._id;
-    }
+
 
     public int getUploaded() {
         return uploaded;

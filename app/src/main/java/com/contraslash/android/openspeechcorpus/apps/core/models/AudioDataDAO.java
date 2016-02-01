@@ -81,7 +81,7 @@ public class AudioDataDAO {
                     cursor.getInt(4)
             );
             elementos.add(object);
-            Log.i(TAG,object.toString());
+            //Log.i(TAG,object.toString());
             cursor.moveToNext();
         }
         cursor.close();
@@ -109,7 +109,7 @@ public class AudioDataDAO {
                     cursor.getInt(4)
             );
             elementos.add(object);
-            Log.i(TAG,object.toString());
+            //Log.i(TAG,object.toString());
             cursor.moveToNext();
         }
         cursor.close();

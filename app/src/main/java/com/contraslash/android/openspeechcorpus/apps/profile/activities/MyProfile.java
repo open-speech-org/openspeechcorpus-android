@@ -7,14 +7,10 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,9 +25,6 @@ import com.contraslash.android.network.Util;
 import com.contraslash.android.openspeechcorpus.R;
 import com.contraslash.android.openspeechcorpus.base.BaseActivity;
 import com.contraslash.android.openspeechcorpus.config.Config;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,7 +57,7 @@ public class MyProfile extends BaseActivity {
     }
 
     @Override
-    protected void mapearGUI() {
+    protected void mapGUI() {
         toolbar=(Toolbar)findViewById(R.id.my_profile_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -75,7 +68,7 @@ public class MyProfile extends BaseActivity {
     }
 
     @Override
-    protected void cargarEventos() {
+    protected void loadEvents() {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,9 +76,9 @@ public class MyProfile extends BaseActivity {
             }
         });
 
-        profileName.setText(getPreferencias().getString(Config.ANONYMOUS_USER_NAME,""));
-        File imgFile = new  File(getPreferencias().getString(Config.ANONYMOUS_USER_PICTURE,""));
-        Log.i(TAG,"Picture PATH: "+ getPreferencias().getString(Config.ANONYMOUS_USER_PICTURE,""));
+        profileName.setText(getPreferences().getString(Config.ANONYMOUS_USER_NAME,""));
+        File imgFile = new  File(getPreferences().getString(Config.ANONYMOUS_USER_PICTURE,""));
+        Log.i(TAG,"Picture PATH: "+ getPreferences().getString(Config.ANONYMOUS_USER_PICTURE,""));
 
         if(imgFile.exists()){
             Log.i(TAG,"Path Exists");
@@ -251,7 +244,7 @@ public class MyProfile extends BaseActivity {
     {
         ArrayList<HttpParameter> encabezados = new ArrayList<>();
         ArrayList<HttpParameter> parametros=new ArrayList<>();
-        parametros.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferencias().getInt(Config.USER_ID, -1)+""));
+        parametros.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferences().getInt(Config.USER_ID, -1)+""));
         parametros.add(new HttpParameter(Config.ANONYMOUS_USER_NAME, profileName.getText()+""));
         ArrayList<MultipartParameter> parametroImagens = new ArrayList<>();
         if(pictureTaked)
@@ -272,8 +265,8 @@ public class MyProfile extends BaseActivity {
 
                     @Override
                     public void ConexionExitosa(int codigoRespuesta, String respuesta) {
-                        getPreferencias().edit().putString(Config.ANONYMOUS_USER_NAME,profileName.getText()+"").apply();
-                        getPreferencias().edit().putString(Config.ANONYMOUS_USER_PICTURE,picturePath).apply();
+                        getPreferences().edit().putString(Config.ANONYMOUS_USER_NAME,profileName.getText()+"").apply();
+                        getPreferences().edit().putString(Config.ANONYMOUS_USER_PICTURE,picturePath).apply();
 
                         Toast.makeText(MyProfile.this,getString(R.string.profile_saved),Toast.LENGTH_SHORT).show();
 

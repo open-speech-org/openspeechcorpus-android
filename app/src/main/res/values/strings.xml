@@ -32,7 +32,6 @@
     <string name="title_activity_history">History</string>
 
 
-
     <string name="history">History</string>
 
     <string name="open">Open</string>
@@ -40,15 +39,16 @@
     <string name="title_activity_send_suggestion">Send Suggestion</string>
     <string name="suggestion">Suggestion</string>
     <string name="uploading_suggestion">Uploading suggestion</string>
-    
+
     <string name="understood">Understood</string>
-    
+
+
     <string name="hold_to_record">Press and hold the red button to record</string>
     <string name="touch_to_play">Touch to play your record</string>
     <string name="touch_to_upload">Touch to upload your record to our server</string>
     <string name="touh_to_open_menu">Open the menu to see other options</string>
     <string name="title_activity_my_profile">My Profile</string>
-    
+
     <string name="nick">Nick</string>
     <string name="save">Save</string>
 
@@ -58,6 +58,14 @@
     <string name="my_profile">My Profile</string>
 
     <string name="custom_record">Custom Record</string>
+    <string name="erase_records">Erase Records</string>
+    <string name="erase_message">This will remove all recordings stored in your device</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
+    <string name="record_does_not_exist">This record is not longer in device </string>
+    <string name="notifications">Notifications</string>
 
 
     <!--HTTPResponseCodeErrors-->
@@ -72,6 +80,37 @@
     <string name="http_405">Method not allowed</string>
     <string name="http_500">Internal Server Error</string>
     <string name="http_999">Time limit exceeded</string>
+
+
     <string name="title_activity_author_list">Author List</string>
     <string name="title_activity_tales_list">Tales List</string>
+    <string name="title_activity_sentences_list">Sentences List</string>
+    <string name="total_votes">Total votes: </string>
+    <string name="tales">Tales</string>
+    <string name="downloading_data">Downloading data</string>
+    <string name="title_activity_upload_tale_audio_data">Upload Tale Audio Data</string>
+    <string name="input_nick">We would like to know your name</string>
+    <string name="maybe_later">Maybe later</string>
+    <string name="title_activity_news_detail">News</string>
+    <string name="title_activity_ranking">Ranking</string>
+    <string name="position">#</string>
+    <string name="name">Name</string>
+    <string name="points">Pnts</string>
+
+    <string name="tale_end">Tale End</string>
+
+
+    <string name="notification_1_title">This is Open Speech Corpus V2 check out the changes</string>
+    <string name="notification_1_body">
+        We\'re improved network consumption saving all the sentences  in your local phone\n
+        But don\'t worry, we just download tales that you requested\n\n
+        We also want to involve more in our acoustic model creation for spanish, starting with a
+        little grammar for a simple Intelligent Personal Assistant, so don\'t get bored reading
+        numbers and simple commands, is a really good cause. We really thank you your collaboration \n\n
+        In the next few days we\'ll upload new tales, if you want your favorite tale in OPS tell us
+        We\'re glad to add it to our database. Even if you want to donate your own writings, let us know
+        and we will add it to our database. \n\n
+        Thanks again for all your support.\n\n
+        Ma0 at contraslash.com\n\n
+    </string>
 </resources>

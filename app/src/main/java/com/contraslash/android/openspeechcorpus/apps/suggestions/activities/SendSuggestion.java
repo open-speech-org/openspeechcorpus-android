@@ -1,16 +1,11 @@
 package com.contraslash.android.openspeechcorpus.apps.suggestions.activities;
 
-import android.hardware.Sensor;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.contraslash.android.network.HttpConnection;
@@ -40,7 +35,7 @@ public class SendSuggestion extends BaseActivity {
     }
 
     @Override
-    protected void mapearGUI() {
+    protected void mapGUI() {
         toolbar = (Toolbar)findViewById(R.id.send_suggestion_toolbar);
         text = (EditText)findViewById(R.id.send_suggestion_text);
         send = (ImageButton)findViewById(R.id.send_suggestion_send_button);
@@ -50,7 +45,7 @@ public class SendSuggestion extends BaseActivity {
     }
 
     @Override
-    protected void cargarEventos()
+    protected void loadEvents()
     {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,9 +59,9 @@ public class SendSuggestion extends BaseActivity {
     {
         ArrayList<HttpParameter> parameters = new ArrayList<>();
         parameters.add(new HttpParameter(Config.SUGGESTION,text.getText()+""));
-        if(getPreferencias().getInt(Config.USER_ID,-1) > 0)
+        if(getPreferences().getInt(Config.USER_ID,-1) > 0)
         {
-            parameters.add(new HttpParameter(Config.ANONYMOUS_USER,getPreferencias().getInt(Config.USER_ID,-1)+""));
+            parameters.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferences().getInt(Config.USER_ID,-1)+""));
         }
         HttpConnection httpConnection = new HttpConnection(
                 this,

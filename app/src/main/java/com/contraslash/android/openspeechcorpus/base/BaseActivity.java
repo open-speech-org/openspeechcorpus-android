@@ -22,29 +22,41 @@ public abstract class BaseActivity extends ActionBarActivity {
         TAG = getLocalClassName();
         preferencias = PreferenceManager.getDefaultSharedPreferences(this);
 
-        mapearGUI();
+        preferencias.edit().putInt("ID_USUARIO",1).putString("NOMBRE_USUARIO","MA0").apply();
 
-        cargarEventos();
+        SharedPreferences.Editor editor = preferencias.edit();
+
+        editor.putInt("ID_USUARIO",1);
+
+        editor.putString("NOMBRE_USUARIO","MA0");
+
+        editor.apply();
+
+        int idUsuario = preferencias.getInt("ID_USUARIO",-1);
+
+        mapGUI();
+
+        loadEvents();
     }
 
     protected abstract int getLayoutResourceId();
 
-    public SharedPreferences getPreferencias() {
+    public SharedPreferences getPreferences() {
         return preferencias;
     }
 
-    protected abstract void mapearGUI();
+    protected abstract void mapGUI();
 
 
-    protected abstract void cargarEventos();
+    protected abstract void loadEvents();
 
-    public void cambiarDeActividad(Class destino)
+    public void changeActivity(Class destino)
     {
         Intent cambioDeActividad = new Intent(this, destino);
         startActivity(cambioDeActividad);
     }
 
-    public void cambiarDeActividad(Class destino, Bundle extras)
+    public void changeActivity(Class destino, Bundle extras)
     {
         Intent cambioDeActividad = new Intent(this, destino);
         cambioDeActividad.putExtras(extras);

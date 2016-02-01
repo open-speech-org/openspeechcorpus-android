@@ -8,7 +8,7 @@ public class Config {
     //public static String BASE_URL = "http://localhost:8000";
 
     //Desarrollo
-    //public static String BASE_URL = "http://192.168.1.35:8000";
+    //public static String BASE_URL = "http://192.168.0.101:8000";
 
 
     //Produccion
@@ -35,6 +35,7 @@ public class Config {
 
 
     public static String SHOW_TUTORIAL = "show_tutorial";
+    public static String NAME_REQUESTED = "name_requested";
 
 
     //Profile vars
@@ -46,4 +47,22 @@ public class Config {
     //Custon Upload Data
 
     public static String TEXT = "text";
+
+
+
+    public static String STATUS_TEXT = "status";
+    public static String ERROR_TEXT = "error";
+
+
+    public static String ERASE_DIALOG_TAG = "erase_dialog";
+    public static String FILL_NICK_DIAGLO_TAG = "fill_nick_dialog";
+
+    public static String NEW_ID = "new_id";
+
+
+    public static String COMMANDS_LAST_UPDATE = "commands_last_update";
+    public static String TALES_LAST_UPDATE = "tales_last_update_new";
+    public static String NEWS_LAST_UPDATE = "news_last_update";
+
+
 }

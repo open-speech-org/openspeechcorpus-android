@@ -62,7 +62,16 @@
     <string name="my_profile">Mi Perfil</string>
 
     <string name="custom_record">Grabación presonalizada</string>
-
+    <string name="erase_records">Eliminar grabaciones</string>
+    <string name="erase_message">Esto eliminará todas as grabaciones de su dispositivo</string>
+    <string name="are_you_sure">Esta seguro?</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancelar</string>
+    <string name="record_does_not_exist">Esta grabación no está almacenada en el dispositivo </string>
+    <string name="input_nick">Nos gustaría saber tu nombre</string>
+    <string name="maybe_later">Quizás después</string>
+    <string name="notifications">Notificaciones</string>
 
     <!--HTTPResponseCodeErrors-->
     <string name="http_0">Sin Errores</string>
@@ -76,4 +85,37 @@
     <string name="http_405">Método no permitido</string>
     <string name="http_500">Error interno del servidor</string>
     <string name="http_999">Servidor no responde</string>
+
+    <string name="title_activity_author_list">Lista de Autores</string>
+    <string name="title_activity_tales_list">Lista de Cuentos</string>
+    <string name="title_activity_sentences_list">Lista de textos</string>
+    <string name="total_votes">Total de votos: </string>
+    <string name="tales">Cuentos</string>
+    <string name="downloading_data">Descargando Datos</string>
+    <string name="title_activity_upload_tale_audio_data">Cuentos</string>
+    <string name="title_activity_news_detail">Noticias</string>
+    <string name="title_activity_ranking">Lista de posiciones</string>
+    <string name="position">#</string>
+    <string name="name">Nombre</string>
+    <string name="points">Pnts</string>
+
+    <string name="notification_1_title">Esto es OpenSpeechCorpus versión 2.0, checa los cambios</string>
+    <string name="notification_1_body">
+        Hemos mejorado el consumo de datos almacenando todas las oraciones en tu telefono.\n\n
+        Pero no te preocupes, solamente descargamos los cuentos que tu solicitas.\n\n
+        También queremos involucrarte en la creación de nuestro modelo acústico para el español, el
+        cual queremos iniciar con una pequeña gramatica para un Asistente Personal Inteligente
+        (Si, queremos hacer a Jarvis), así que por favor no te aburras leyendo comandos, es para una
+        causa muy buena. Realmente agradecemos tu colaboración.\n\n
+
+        En los próximos días estaremos agregando nuevos cuentos a nuestra colección, así que si quieres
+        que tus cuentos favoritos estén en nuestra base de datos, déjanos saberlo. Mejor aún, si tienes
+        escritos que deseas compartir con nosotros, con gusto los agregaremos a nuestra base de datos.\n\n
+
+        Gracias por todo tu apoyo.\n\n\n
+
+        Ma0 en contraslash.com\n\n
+    </string>
+
+    <string name="tale_end">Fin del cuento</string>
 </resources>

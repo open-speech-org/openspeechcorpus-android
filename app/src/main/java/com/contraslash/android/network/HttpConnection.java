@@ -22,6 +22,9 @@ import java.util.ArrayList;
  */
 public class HttpConnection extends AsyncTask<String, Void, String>
 {
+
+
+
     private static final String TAG = "HttpConnection";
 
     /**
