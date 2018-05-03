@@ -1,9 +1,11 @@
 package com.contraslash.android.openspeechcorpus.apps.tales.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.contraslash.android.openspeechcorpus.R;
@@ -32,6 +34,21 @@ public class TaleAdapter extends BaseCustomAdapter {
         calification.setRating(tale.getCalification());
         TextView totalVotes = (TextView)view.findViewById(R.id.element_tale_total_votes);
         totalVotes.setText(context.getString(R.string.total_votes)+tale.getTotalVotes());
+
+        RelativeLayout cardView = (RelativeLayout)view.findViewById(R.id.element_tale_card_view);
+
+        try {
+
+            if (tale.getReaded()==1) {
+                cardView.setBackgroundColor(context.getResources().getColor(R.color.teal));
+            } else {
+                cardView.setBackgroundColor(context.getResources().getColor(R.color.white));
+            }
+        }catch (IndexOutOfBoundsException ioe)
+        {
+            Log.i(TAG, "Position of break: " + position);
+            ioe.printStackTrace();
+        }
 
         return view;
     }

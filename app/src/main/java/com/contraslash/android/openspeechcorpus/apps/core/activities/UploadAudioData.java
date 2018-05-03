@@ -28,6 +28,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,11 +39,13 @@ import com.contraslash.android.network.MultipartParameter;
 import com.contraslash.android.network.OnServerResponse;
 import com.contraslash.android.network.Util;
 import com.contraslash.android.openspeechcorpus.R;
+import com.contraslash.android.openspeechcorpus.apps.aphasia.activities.LevelList;
 import com.contraslash.android.openspeechcorpus.apps.authentication.activities.SplashScreen;
 import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleAnimation;
 import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleView;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioData;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioDataDAO;
+import com.contraslash.android.openspeechcorpus.apps.core.utils.AudioDataComparator;
 import com.contraslash.android.openspeechcorpus.apps.history.activities.History;
 import com.contraslash.android.openspeechcorpus.apps.history.dialogs.EraseDialog;
 import com.contraslash.android.openspeechcorpus.apps.miscellany.models.Command;
@@ -56,6 +59,11 @@ import com.contraslash.android.openspeechcorpus.apps.profile.activities.RankingL
 import com.contraslash.android.openspeechcorpus.apps.profile.dialogs.FillNick;
 import com.contraslash.android.openspeechcorpus.apps.suggestions.activities.SendSuggestion;
 import com.contraslash.android.openspeechcorpus.apps.tales.activities.AuthorList;
+import com.contraslash.android.openspeechcorpus.apps.tales.models.Sentence;
+import com.contraslash.android.openspeechcorpus.apps.tales.models.SentenceDAO;
+import com.contraslash.android.openspeechcorpus.apps.tales.models.Tale;
+import com.contraslash.android.openspeechcorpus.apps.tales.models.TaleDAO;
+import com.contraslash.android.openspeechcorpus.apps.tales.utils.SentenceComparator;
 import com.contraslash.android.openspeechcorpus.base.BaseActivity;
 import com.contraslash.android.openspeechcorpus.config.Config;
 
@@ -70,7 +78,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.concurrent.Semaphore;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
@@ -121,6 +132,7 @@ public class UploadAudioData extends BaseActivity implements
     //End of GUI Elements
 
     AudioDataDAO audioDataDAO;
+
     ArrayList<AudioData> records;
     AudioData record;
 
@@ -139,11 +151,14 @@ public class UploadAudioData extends BaseActivity implements
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
 
-        if (null == savedInstanceState) {
+        if (null == savedInstanceState)
+        {
             mNavItemId = R.id.menu_drawer_record;
-        } else {
+        } else
+        {
             mNavItemId = savedInstanceState.getInt(Config.NAV_ITEM_ID);
         }
 
@@ -170,6 +185,7 @@ public class UploadAudioData extends BaseActivity implements
 
 
         audioDataDAO=new AudioDataDAO(this);
+
         records = audioDataDAO.readAll();
         configureRecord(getRecord());
 
@@ -181,8 +197,99 @@ public class UploadAudioData extends BaseActivity implements
         //deleteAllNotUploaded();
 
 
-        show_tutorial();
+        //show_tutorial();
 
+        if(!getPreferences().getBoolean(Config.CAPTURE_TALES_READED, false))
+        {
+            new UpdateReadedTales().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
+    }
+
+    private class UpdateReadedTales extends  AsyncTask<Void,Void,Void>
+    {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            TaleDAO taleDataDAO =new TaleDAO(UploadAudioData.this);
+            ArrayList<Tale>tales = (ArrayList<Tale>)taleDataDAO.all();
+
+            SentenceDAO sentenceDAO = new SentenceDAO(UploadAudioData.this);
+            ArrayList<Sentence> sentences = (ArrayList<Sentence>)sentenceDAO.all();
+
+            ArrayList<AudioData> audioDatas= audioDataDAO.readAll();
+
+
+            Collections.sort(audioDatas, new AudioDataComparator());
+            Collections.sort(sentences, new SentenceComparator());
+
+            for(AudioData audioData: audioDatas)
+            {
+                if(audioData.getUploaded()==1)
+                {
+                    Sentence sentence = searchSentence(sentences, audioData.getSentence_id());
+//                    sentence.setUploaded(1);
+//                    sentenceDAO.update(sentence);
+                    Log.i(TAG, "Readed from"+audioData.getSentence_id());
+                    if(sentence!=null)
+                    {
+                        Log.i(TAG, "Readed from"+sentence.getId()+sentence.getText());
+                        sentence.setUploaded(1);
+                        sentenceDAO.update(sentence);
+                    }
+                    else
+                    {
+                        Log.i(TAG, "NULL");
+                    }
+                }
+            }
+
+
+            for(Tale tale: tales)
+            {
+
+                int totalSentences = 0;
+                int numReaded=0;
+                for(Sentence sentence:sentences)
+                {
+                    if(sentence.getTale_id()==tale.getId())
+                    {
+                        totalSentences+=1;
+                        if(sentence.getUploaded()==1)
+                        {
+                            numReaded+=1;
+
+                        }
+                    }
+                }
+                Log.i(TAG, numReaded+"/"+totalSentences);
+                if((double)numReaded/(double)totalSentences>0.95)
+                {
+                    Log.i(TAG, tale.getTitle()+": READED");
+                    tale.setReaded(1);
+                    taleDataDAO.update(tale);
+                }
+                else
+                {
+                    Log.i(TAG, tale.getTitle()+": NOT READED");
+                }
+            }
+
+            getPreferences().edit().putBoolean(Config.CAPTURE_TALES_READED,true).apply();
+            return null;
+        }
+    }
+
+    private Sentence searchSentence(ArrayList<Sentence> sentences, int id)
+    {
+        for(Sentence sentence:sentences)
+        {
+            if(sentence.getId() == id)
+            {
+                return sentence;
+            }
+        }
+        return null;
     }
 
     private void show_tutorial()
@@ -1072,6 +1179,9 @@ public class UploadAudioData extends BaseActivity implements
 //                break;
             case R.id.menu_drawer_tales:
                 changeActivity(AuthorList.class);
+                break;
+            case R.id.menu_drawer_words:
+                changeActivity(LevelList.class);
                 break;
             case R.id.menu_drawer_erase:
                 EraseDialog eraseDialog = new EraseDialog();

@@ -24,6 +24,10 @@ public class Utils {
         String createSentence = "CREATE TABLE IF NOT EXISTS " + table.getTableName() + " ( _id integer primary key,";
         for(Field f:table.getClass().getDeclaredFields())
         {
+            if(f.toGenericString().contains("$"))
+            {
+                continue;
+            }
             createSentence += f.getName() + " ";
             createSentence += getSQLiteTypes(f.getType())+ ", ";
         }
@@ -40,6 +44,10 @@ public class Utils {
         fieldNames.add("_id");
         for(Field f:object.getClass().getDeclaredFields())
         {
+            if(f.toGenericString().contains("$"))
+            {
+                continue;
+            }
         //    Log.i(TAG,"FIELD_NAME: "+f.getName());
             fieldNames.add(f.getName());
         }
@@ -52,6 +60,10 @@ public class Utils {
         fieldNames.add(INT);
         for(Field f:object.getClass().getDeclaredFields())
         {
+            if(f.toGenericString().contains("$"))
+            {
+                continue;
+            }
         //    Log.i(TAG,"FIELD_TYPE: "+f);
             fieldNames.add(getPrimitiveType(f));
         }

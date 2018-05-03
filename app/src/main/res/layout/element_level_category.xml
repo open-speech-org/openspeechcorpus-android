@@ -5,12 +5,12 @@
     android:layout_height="wrap_content"
     >
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
         android:layout_margin="@dimen/margin_card"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/element_tale_card_view">
+        card_view:cardCornerRadius="4dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,29 +20,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/element_tale_name"
+                android:id="@+id/element_level_category_title"
                 android:textSize="@dimen/font_size_medium"/>
 
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:id="@+id/element_tale_calification"
-                style="?android:attr/ratingBarStyleSmall"
-                android:numStars="5"
-                android:isIndicator="true"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/element_tale_total_votes"
-                android:layout_gravity="end"
-                android:gravity="end"
-                />
 
         </LinearLayout>
 
 
-    </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
 
 </LinearLayout>

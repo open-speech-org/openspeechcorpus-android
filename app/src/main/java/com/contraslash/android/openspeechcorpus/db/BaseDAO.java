@@ -351,6 +351,7 @@ public abstract class BaseDAO{
                 ex.printStackTrace();
             }
         }
+        Log.i(TAG,"Pre");
         int result = database.update(object.getTableName(), values, "_id = " + object.get_id(),null);
         Log.i(TAG,"Update Result: "+result);
         close();

@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,8 +21,11 @@ import com.contraslash.android.openspeechcorpus.apps.tales.models.Author;
 import com.contraslash.android.openspeechcorpus.apps.tales.models.AuthorDAO;
 import com.contraslash.android.openspeechcorpus.apps.tales.models.Tale;
 import com.contraslash.android.openspeechcorpus.apps.tales.models.TaleDAO;
+import com.contraslash.android.openspeechcorpus.apps.tales.utils.JSONParser;
+import com.contraslash.android.openspeechcorpus.apps.tales.utils.UpdateGUIAsync;
 import com.contraslash.android.openspeechcorpus.base.BaseActivity;
 import com.contraslash.android.openspeechcorpus.config.Config;
+import com.contraslash.android.openspeechcorpus.db.BaseDAO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -196,22 +200,53 @@ public class AuthorList extends BaseActivity {
             JSONObject response= new JSONObject(json);
             if(response.getInt(Config.ERROR_TEXT)==0)
             {
-                JSONArray authors = response.getJSONArray("authors");
-                ArrayList<Author> authorsList = new ArrayList<>();
-                authorAdapter.clear();
-                for(int i=0;i<authors.length();i++)
-                {
-                    JSONObject jsonAuthor = authors.getJSONObject(i);
-                    Author new_author = new Author();
-                    new_author.setId(jsonAuthor.getInt("id"));
-                    new_author.setName(jsonAuthor.getString("name"));
-                    new_author.setBiography(jsonAuthor.getString("biography"));
-                    new_author.setBirth(jsonAuthor.getString("birth"));
-                    new_author.setDeath(jsonAuthor.getString("death"));
-                    authorsList.add(new_author);
-                    authorDAO.create(new_author);
-                    authorAdapter.add(new_author);
-                }
+                UpdateGUIAsync updater = new UpdateGUIAsync(
+                        authorAdapter,
+                        authorDAO,
+                        response.getString("authors"),
+                        new JSONParser() {
+                            @Override
+                            public ArrayList execute(ArrayAdapter adapter, String json, BaseDAO dao) {
+                                ArrayList arrayList = new ArrayList();
+                                try {
+                                    JSONArray authors = new JSONArray(json);
+                                    adapter.clear();
+                                    for (int i = 0; i < authors.length(); i++) {
+                                        JSONObject jsonAuthor = authors.getJSONObject(i);
+                                        Author new_author = new Author();
+                                        new_author.setId(jsonAuthor.getInt("id"));
+                                        new_author.setName(jsonAuthor.getString("name"));
+                                        new_author.setBiography(jsonAuthor.getString("biography"));
+                                        new_author.setBirth(jsonAuthor.getString("birth"));
+                                        new_author.setDeath(jsonAuthor.getString("death"));
+                                        dao.create(new_author);
+                                        arrayList.add(new_author);
+                                    }
+                                }catch (JSONException jse)
+                                {
+                                    jse.printStackTrace();
+                                }
+                                return arrayList;
+                            }
+                        });
+
+                updater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                JSONArray authors = response.getJSONArray("authors");
+//                ArrayList<Author> authorsList = new ArrayList<>();
+//                authorAdapter.clear();
+//                for(int i=0;i<authors.length();i++)
+//                {
+//                    JSONObject jsonAuthor = authors.getJSONObject(i);
+//                    Author new_author = new Author();
+//                    new_author.setId(jsonAuthor.getInt("id"));
+//                    new_author.setName(jsonAuthor.getString("name"));
+//                    new_author.setBiography(jsonAuthor.getString("biography"));
+//                    new_author.setBirth(jsonAuthor.getString("birth"));
+//                    new_author.setDeath(jsonAuthor.getString("death"));
+//                    authorsList.add(new_author);
+//                    authorDAO.create(new_author);
+//                    authorAdapter.add(new_author);
+//                }
                 authorAdapter.notifyDataSetChanged();
 
             }
@@ -245,19 +280,51 @@ public class AuthorList extends BaseActivity {
                     }
                     getAuthorsFromServer(maxNewId);
                 }
-                for(int i=0;i<tales.length();i++)
-                {
-                    JSONObject jsonTale = tales.getJSONObject(i);
-                    Tale new_tale = new Tale();
-                    new_tale.setId(jsonTale.getInt("id"));
-                    new_tale.setTitle(jsonTale.getString("title"));
-                    new_tale.setAuthor(jsonTale.getJSONObject("author").getString("name"));
-                    new_tale.setAuthor_id(jsonTale.getJSONObject("author").getInt("id"));
-                    new_tale.setDescription(jsonTale.getString("description"));
-                    new_tale.setTotalVotes(jsonTale.getInt("total_votes"));
-                    new_tale.setCalification((float) jsonTale.getDouble("calification"));
-                    taleDAO.create(new_tale);
-                }
+                UpdateGUIAsync talesUpdater = new UpdateGUIAsync(null,
+                        taleDAO,
+                        response.getString("tales"),
+                        new JSONParser() {
+                            @Override
+                            public ArrayList execute(ArrayAdapter adapter, String json, BaseDAO dao) {
+                                try {
+                                    JSONArray tales = new JSONArray(json);
+                                    for (int i = 0; i < tales.length(); i++) {
+                                        JSONObject jsonTale = tales.getJSONObject(i);
+                                        Tale new_tale = new Tale();
+                                        new_tale.setId(jsonTale.getInt("id"));
+                                        new_tale.setTitle(jsonTale.getString("title"));
+                                        new_tale.setAuthor(jsonTale.getJSONObject("author").getString("name"));
+                                        new_tale.setAuthor_id(jsonTale.getJSONObject("author").getInt("id"));
+                                        new_tale.setDescription(jsonTale.getString("description"));
+                                        new_tale.setTotalVotes(jsonTale.getInt("total_votes"));
+                                        new_tale.setCalification((float) jsonTale.getDouble("calification"));
+                                        dao.create(new_tale);
+                                    }
+                                }catch (JSONException jse)
+                                {
+                                    jse.printStackTrace();
+                                }
+
+                                return null;
+                            }
+
+                        }
+                );
+
+                talesUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                for(int i=0;i<tales.length();i++)
+//                {
+//                    JSONObject jsonTale = tales.getJSONObject(i);
+//                    Tale new_tale = new Tale();
+//                    new_tale.setId(jsonTale.getInt("id"));
+//                    new_tale.setTitle(jsonTale.getString("title"));
+//                    new_tale.setAuthor(jsonTale.getJSONObject("author").getString("name"));
+//                    new_tale.setAuthor_id(jsonTale.getJSONObject("author").getInt("id"));
+//                    new_tale.setDescription(jsonTale.getString("description"));
+//                    new_tale.setTotalVotes(jsonTale.getInt("total_votes"));
+//                    new_tale.setCalification((float) jsonTale.getDouble("calification"));
+//                    taleDAO.create(new_tale);
+//                }
             }
             else
             {

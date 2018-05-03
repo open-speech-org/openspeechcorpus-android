@@ -9,10 +9,11 @@ public class Config {
 
     //Desarrollo
     //public static String BASE_URL = "http://192.168.0.101:8000";
+//    public static String BASE_URL = "http://192.168.1.123:8000";
 
 
     //Produccion
-    public static String BASE_URL = "http://openspeechcorpus.com";
+    public static String BASE_URL = "http://openspeechcorpus.contraslash.com";
 
     public static String API_BASE_URL = "/api";
 
@@ -63,6 +64,8 @@ public class Config {
     public static String COMMANDS_LAST_UPDATE = "commands_last_update";
     public static String TALES_LAST_UPDATE = "tales_last_update_new";
     public static String NEWS_LAST_UPDATE = "news_last_update";
+
+    public static String CAPTURE_TALES_READED = "capture_tales_readed";
 
 
 }

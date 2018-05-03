@@ -8,8 +8,8 @@ android {
         applicationId "com.contraslash.android.openspeechcorpus"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 16
-        versionName "2.1.2"
+        versionCode 20
+        versionName "2.4.1"
     }
     buildTypes {
         release {
@@ -44,4 +44,6 @@ dependencies {
     compile 'com.github.deano2390:MaterialShowcaseView:1.0.5@aar'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'io.sentry:sentry-android:1.6.3'
 }

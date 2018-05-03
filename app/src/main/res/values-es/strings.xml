@@ -16,6 +16,7 @@
     <string name="uploading_audio">Subiendo audio</string>
     <string name="may_take_few_seconds">Esto puede tardar algunos segundos</string>
     <string name="upload_successful">Carga de datos exitosa</string>
+    <string name="upload_failure">Carga de datos fallida, intentelo de nuevo</string>
 
     <string name="downloading_text">Descargando textos</string>
     <string name="wait_please">Espere por favor</string>
@@ -91,6 +92,9 @@
     <string name="title_activity_sentences_list">Lista de textos</string>
     <string name="total_votes">Total de votos: </string>
     <string name="tales">Cuentos</string>
+    <string name="levels">Niveles</string>
+    <string name="categories">Categorias</string>
+    <string name="words">Palabras</string>
     <string name="downloading_data">Descargando Datos</string>
     <string name="title_activity_upload_tale_audio_data">Cuentos</string>
     <string name="title_activity_news_detail">Noticias</string>

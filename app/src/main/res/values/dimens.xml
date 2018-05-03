@@ -37,5 +37,7 @@
 
     <dimen name="width_notification_panel">250dp</dimen>
 
+    <dimen name="tam_progress_bar">150dp</dimen>
+
 
 </resources>

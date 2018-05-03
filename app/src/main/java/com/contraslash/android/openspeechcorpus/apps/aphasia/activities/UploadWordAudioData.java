@@ -1,19 +1,16 @@
-package com.contraslash.android.openspeechcorpus.apps.tales.activities;
+package com.contraslash.android.openspeechcorpus.apps.aphasia.activities;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,11 +23,11 @@ import com.contraslash.android.network.MultipartParameter;
 import com.contraslash.android.network.OnServerResponse;
 import com.contraslash.android.network.Util;
 import com.contraslash.android.openspeechcorpus.R;
-import com.contraslash.android.openspeechcorpus.apps.core.activities.UploadAudioData;
 import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleAnimation;
 import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleView;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioData;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioDataDAO;
+import com.contraslash.android.openspeechcorpus.apps.tales.activities.SentencesList;
 import com.contraslash.android.openspeechcorpus.apps.tales.models.Sentence;
 import com.contraslash.android.openspeechcorpus.apps.tales.models.SentenceDAO;
 import com.contraslash.android.openspeechcorpus.apps.tales.models.Tale;
@@ -43,9 +40,11 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class UploadTaleAudioData extends BaseActivity {
+public class UploadWordAudioData extends BaseActivity {
 
     //GUI Elemets
 
@@ -86,7 +85,7 @@ public class UploadTaleAudioData extends BaseActivity {
     int author_id;
     int tale_id;
     int sentence_id;
-
+    String sentence_text;
 
     int current_id_index;
 
@@ -108,14 +107,22 @@ public class UploadTaleAudioData extends BaseActivity {
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null)
         {
+
             Log.i(TAG,"Bundle not null");
             sentences_ids = bundle.getIntegerArrayList("sentences_ids");
+//            sentences_ids = new ArrayList<>();
+//            sentences_ids.add(0);
+            sentence_id = bundle.getInt("sentence_id");
+            sentence_text = bundle.getString("text");
+            Log.i(TAG, "SENTENCE ID"+sentence_id + "Text"+sentence_text);
             Log.i(TAG,"SENTENCES IDS LENGTH: "+sentences_ids.size());
             sentences_texts = bundle.getStringArrayList("sentences_texts");
+//            sentences_texts = new ArrayList<>();
+//            sentences_texts.add(bundle.getString("text"));
             Log.i(TAG,"SENTENCES TEXt LENGTH: "+sentences_texts.size());
-            author_id = bundle.getInt("author_id");
-            tale_id = bundle.getInt("tale_id");
-            sentence_id = bundle.getInt("sentence_id");
+            author_id = bundle.getInt("author_id", 0);
+            tale_id = bundle.getInt("tale_id", 0);
+            sentence_id = bundle.getInt("sentence_id", 0);
             Log.i(TAG,"SENTENCES ID:"+sentence_id);
             for(int i=0;i<sentences_ids.size(); i++)
             {
@@ -224,7 +231,7 @@ public class UploadTaleAudioData extends BaseActivity {
     }
 
 
-    public UploadTaleAudioData() {
+    public UploadWordAudioData() {
         dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/openspeechcorpus/records";
         File dir = new File(dirPath);
         Log.i(TAG, dir.mkdirs() + "");
@@ -264,18 +271,19 @@ public class UploadTaleAudioData extends BaseActivity {
         recordStateText = (TextView)findViewById(R.id.upload_tale_audio_data_recording_text);
 
         changeText = (ImageView)findViewById(R.id.upload_tale_audio_data_change_text);
+//        changeText.setVisibility(View.GONE);
 
         taleText = (TextView)findViewById(R.id.upload_tale_audio_data_tale_text);
 
         taleProgress = (TextView)findViewById(R.id.upload_tale_audio_data_tale_progress);
+//        taleProgress.setVisibility(View.GONE);
+
 
     }
 
     @Override
     protected void loadEvents()
     {
-
-
 
         getSupportActionBar().getThemedContext();
 
@@ -347,19 +355,27 @@ public class UploadTaleAudioData extends BaseActivity {
     {
 
         if(canUpload) {
+            String encoded_text = "";
+            try{
+                encoded_text = URLEncoder.encode(sentence_text, "utf-8");
+            }catch (UnsupportedEncodingException use)
+            {
+                use.printStackTrace();
+            }
             ArrayList<HttpParameter> parameters = new ArrayList<>();
-            parameters.add(new HttpParameter("tale_sentence_id", record.getSentence_id() + ""));
+            parameters.add(new HttpParameter("level_sentence_id", sentence_id + ""));
+            parameters.add(new HttpParameter("text", encoded_text));
             if (getPreferences().getInt(Config.USER_ID, -1) > 0) {
                 parameters.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferences().getInt(Config.USER_ID, 1) + ""));
             }
-
+            Log.i(TAG, "Level Sentence ID: "+sentence_id+" Text: "+encoded_text);
             ArrayList<MultipartParameter> multiparPatameters = new ArrayList<>();
             multiparPatameters.add(new MultipartParameter("audio", mFileName, "video/mp4"));
             record.setSentence_text(taleText.getText()+"");
 
             HttpConnectionMultipart uploadAudio = new HttpConnectionMultipart(
                     this,
-                    Config.BASE_URL + Config.API_BASE_URL + "/sentences/upload/",
+                    Config.BASE_URL + Config.API_BASE_URL + "/words/upload/",
                     null,
                     parameters,
                     multiparPatameters,
@@ -371,7 +387,7 @@ public class UploadTaleAudioData extends BaseActivity {
                                 int status = new JSONObject(respuesta).getInt("error");
                                 if(status == 0)
                                 {
-                                    Toast.makeText(UploadTaleAudioData.this, UploadTaleAudioData.this.getResources().getString(R.string.upload_successful), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(UploadWordAudioData.this, UploadWordAudioData.this.getResources().getString(R.string.upload_successful), Toast.LENGTH_SHORT).show();
                                     record.setUploaded(1);
                                     sentence.setUploaded(1);
                                     sentenceDAO.update(sentence);
@@ -381,7 +397,7 @@ public class UploadTaleAudioData extends BaseActivity {
                                 }
                                 else
                                 {
-                                    Toast.makeText(UploadTaleAudioData.this, UploadTaleAudioData.this.getResources().getString(R.string.upload_failure), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(UploadWordAudioData.this, UploadWordAudioData.this.getResources().getString(R.string.upload_failure), Toast.LENGTH_SHORT).show();
                                 }
                             }
                             catch (JSONException jse)
@@ -393,7 +409,7 @@ public class UploadTaleAudioData extends BaseActivity {
 
                         @Override
                         public void ConexionFallida(int codigoRespuesta) {
-                            new Util(UploadTaleAudioData.this).mostrarErrores(codigoRespuesta);
+                            new Util(UploadWordAudioData.this).mostrarErrores(codigoRespuesta);
                         }
 
                         @Override
@@ -406,6 +422,7 @@ public class UploadTaleAudioData extends BaseActivity {
             uploadAudio.initDialog(getResources().getString(R.string.uploading_audio), getResources().getString(R.string.may_take_few_seconds));
             uploadAudio.setDialogCancelable(false);
             uploadAudio.setShowDialog(true);
+            //TODO:  We're not uploading audio yet
             uploadAudio.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else
@@ -464,6 +481,6 @@ public class UploadTaleAudioData extends BaseActivity {
         Bundle b = new Bundle();
         b.putInt("tale_id",tale_id);
         b.putInt("author_id",author_id);
-        changeActivity(SentencesList.class, b);
+        changeActivity(LevelSentenceList.class, b);
     }
 }

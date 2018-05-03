@@ -14,9 +14,24 @@
         app:theme="@style/ThemeOverlay.AppCompat.Light"
         />
 
-    <ListView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/tales_list_list_view"/>
+        android:layout_height="match_parent">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tales_list_list_view"/>
+
+        <ProgressBar
+            android:layout_width="@dimen/tam_progress_bar"
+            android:layout_height="@dimen/tam_progress_bar"
+            android:layout_centerInParent="true"
+            android:id="@+id/tales_list_progress"
+            />
+
+    </RelativeLayout>
+
+
 
 </LinearLayout>

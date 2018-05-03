@@ -15,6 +15,7 @@
     <string name="uploading_audio">Uploading Audio</string>
     <string name="may_take_few_seconds">This may take a few seconds</string>
     <string name="upload_successful">Upload Successful</string>
+    <string name="upload_failure">Upload Failure, try again</string>
 
     <string name="downloading_text">Downloading texts</string>
     <string name="wait_please">Wait please</string>
@@ -87,6 +88,9 @@
     <string name="title_activity_sentences_list">Sentences List</string>
     <string name="total_votes">Total votes: </string>
     <string name="tales">Tales</string>
+    <string name="levels">Levels</string>
+    <string name="categories">Categories</string>
+    <string name="words">Words</string>
     <string name="downloading_data">Downloading data</string>
     <string name="title_activity_upload_tale_audio_data">Upload Tale Audio Data</string>
     <string name="input_nick">We would like to know your name</string>

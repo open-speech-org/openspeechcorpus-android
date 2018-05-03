@@ -15,6 +15,10 @@
             android:icon="@drawable/ic_book_18pt_3x"
             android:title="@string/tales"/>
         <item
+            android:id="@+id/menu_drawer_words"
+            android:icon="@drawable/ic_description_black_24dp"
+            android:title="@string/words"/>
+        <item
             android:id="@+id/menu_drawer_ranking_position"
             android:icon="@drawable/ic_format_list_numbered_3x"
             android:title="@string/title_activity_ranking"/>

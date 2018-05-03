@@ -3,6 +3,7 @@
     package="com.contraslash.android.openspeechcorpus">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -116,13 +117,49 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.contraslash.android.openspeechcorpus.apps.core.activities.UploadAudioData" />
         </activity>
-        <activity android:name=".apps.profile.activities.RankingList"
+        <activity
+            android:name=".apps.profile.activities.RankingList"
             android:label="@string/title_activity_ranking"
             android:parentActivityName=".apps.core.activities.UploadAudioData"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.contraslash.android.openspeechcorpus.apps.core.activities.UploadAudioData" />
+        </activity>
+        <activity
+            android:name=".apps.aphasia.activities.LevelList"
+            android:label="@string/levels"
+            android:parentActivityName=".apps.core.activities.UploadAudioData"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.contraslash.android.openspeechcorpus.apps.core.activities.UploadAudioData" />
+        </activity>
+        <activity
+            android:name=".apps.aphasia.activities.LevelCategoriesList"
+            android:label="@string/categories"
+            android:parentActivityName=".apps.aphasia.activities.LevelList"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.contraslash.android.openspeechcorpus.apps.aphasia.activities.LevelList" />
+        </activity>
+        <activity
+            android:name=".apps.aphasia.activities.LevelSentenceList"
+            android:label="@string/words"
+            android:parentActivityName=".apps.aphasia.activities.LevelCategoriesList"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.contraslash.android.openspeechcorpus.apps.aphasia.activities.LevelCategoriesList" />
+        </activity>
+        <activity
+            android:name=".apps.aphasia.activities.UploadWordAudioData"
+            android:parentActivityName=".apps.aphasia.activities.LevelSentenceList"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.contraslash.android.openspeechcorpus.apps.aphasia.activities.LevelSentenceList" />
         </activity>
     </application>
 

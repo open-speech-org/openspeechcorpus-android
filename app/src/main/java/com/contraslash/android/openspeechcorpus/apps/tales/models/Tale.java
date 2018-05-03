@@ -15,6 +15,7 @@ public class Tale extends Table {
     String description;
     int totalVotes;
     float calification;
+    int readed;
 
     public Tale(){}
 
@@ -81,6 +82,14 @@ public class Tale extends Table {
 
     public void setCalification(float calification) {
         this.calification = calification;
+    }
+
+    public int getReaded() {
+        return readed;
+    }
+
+    public void setReaded(int readed) {
+        this.readed = readed;
     }
 
     @Override

@@ -25,12 +25,20 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/upload_tale_audio_data_tale_progress"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/minimun_margin"/>
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/max_heigth_text_tale_box"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/margin_lateral_bigger"
-                android:layout_marginRight="@dimen/margin_lateral_bigger">
+                android:layout_marginRight="@dimen/margin_lateral_bigger"
+                android:layout_below="@id/upload_tale_audio_data_tale_progress">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.contraslash.android.network.Util;
+import com.contraslash.android.openspeechcorpus.apps.aphasia.models.Level;
+import com.contraslash.android.openspeechcorpus.apps.aphasia.models.LevelCategory;
+import com.contraslash.android.openspeechcorpus.apps.aphasia.models.LevelSentence;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioData;
 import com.contraslash.android.openspeechcorpus.apps.miscellany.models.Command;
 import com.contraslash.android.openspeechcorpus.apps.news.models.New;
@@ -21,7 +24,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 
     private String TAG = "SQLiteHelper";
     private static final String DATABASE_NAME = "openspeechcorpus.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 11;
 
 
     Table [] tables = {
@@ -30,7 +33,10 @@ public class SQLiteHelper extends SQLiteOpenHelper{
             new Sentence(),
             new Tale(),
             new New(),
-            new Command()
+            new Command(),
+            new Level(),
+            new LevelCategory(),
+            new LevelSentence()
     };
 
     // Database creation sql statement
@@ -51,6 +57,8 @@ public class SQLiteHelper extends SQLiteOpenHelper{
             database.execSQL(sentence);
         }
 
+
+
     }
 
     @Override
@@ -64,6 +72,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 //            database.execSQL(sentence);
 //        }
         onCreate(database);
+        patches(database, oldVersion);
     }
 
     Table [] tables1 = {
@@ -71,6 +80,15 @@ public class SQLiteHelper extends SQLiteOpenHelper{
             new Sentence(),
             new Tale()
     };
+
+
+    private void patches(SQLiteDatabase database, int oldVersion)
+    {
+        if(oldVersion==8)
+        {
+            database.execSQL("ALTER TABLE OPS_tale ADD COLUMN readed integer");
+        }
+    }
 
     public void purgeDatabase()
     {

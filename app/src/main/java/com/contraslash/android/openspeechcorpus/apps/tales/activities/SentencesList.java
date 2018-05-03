@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.contraslash.android.network.HttpConnection;
@@ -21,8 +23,11 @@ import com.contraslash.android.openspeechcorpus.apps.tales.adapters.SentenceAdap
 import com.contraslash.android.openspeechcorpus.apps.tales.models.Sentence;
 import com.contraslash.android.openspeechcorpus.apps.tales.models.SentenceDAO;
 import com.contraslash.android.openspeechcorpus.apps.tales.models.TaleDAO;
+import com.contraslash.android.openspeechcorpus.apps.tales.utils.JSONParser;
+import com.contraslash.android.openspeechcorpus.apps.tales.utils.UpdateGUIAsync;
 import com.contraslash.android.openspeechcorpus.base.BaseActivity;
 import com.contraslash.android.openspeechcorpus.config.Config;
+import com.contraslash.android.openspeechcorpus.db.BaseDAO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +49,8 @@ public class SentencesList extends BaseActivity {
     SentenceDAO sentenceDAO;
     AudioDataDAO audioDataDAO;
     ArrayList<AudioData> audioDatas;
+
+    ProgressBar progressBar;
 
     int tale_id;
     int author_id;
@@ -67,6 +74,10 @@ public class SentencesList extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sentencesListView = (ListView)findViewById(R.id.sentences_list_list_view);
+        progressBar = (ProgressBar)findViewById(R.id.sentences_list_progress);
+
+        sentencesListView.setEmptyView(progressBar);
+
         sentenceAdapter = new SentenceAdapter(this, R.layout.element_sentence, new ArrayList());
         sentencesListView.setAdapter(sentenceAdapter);
 
@@ -88,72 +99,63 @@ public class SentencesList extends BaseActivity {
     @Override
     protected void loadEvents() {
         sentenceDAO = new SentenceDAO(this);
-        Bundle bundle = getIntent().getExtras();
         audioDataDAO = new AudioDataDAO(this);
-        Log.i(TAG, "AudioDataDao Created");
-        audioDatas = audioDataDAO.readAll();
-        Collections.sort(audioDatas,new AudioDataComparator());
-        if(bundle!=null)
-        {
-            tale_id= bundle.getInt("tale_id",-1);
-            author_id= bundle.getInt("author_id",-1);
+        sentencesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle b = new Bundle();
+                b.putInt("sentence_id",((Sentence)(sentenceAdapter.getItem(position))).getId());
+                b.putInt("tale_id",tale_id);
+                b.putInt("author_id",author_id);
+                b.putIntegerArrayList("sentences_ids", sentences_id);
+                b.putStringArrayList("sentences_texts", sentences_texts);
+                Log.i(TAG,"Sentence ID"+(((Sentence)(sentenceAdapter.getItem(position))).getId()));
+                changeActivity(UploadTaleAudioData.class, b);
+            }
+        });
+        new LoadDataFromDB().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-            if(tale_id>0)
+    private class LoadDataFromDB extends AsyncTask<Void, Void, ArrayList>
+    {
+
+        @Override
+        protected ArrayList doInBackground(Void... params) {
+
+            Log.i(TAG, "AudioDataDao Created");
+            audioDatas = audioDataDAO.readAll();
+            Collections.sort(audioDatas,new AudioDataComparator());
+            ArrayList arrayList = new ArrayList();
+
+            return arrayList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList arrayList) {
+            if(arrayList != null)
             {
-                sentences = sentenceDAO.getSentencesByTaleId(tale_id);
-                if(sentences.isEmpty())
+                Bundle bundle = getIntent().getExtras();
+                if(bundle!=null)
                 {
-                    HttpConnection httpConnection = new HttpConnection(
-                            this,
-                            Config.BASE_URL + Config.API_BASE_URL + "/sentences/" + tale_id + "/",
-                            new ArrayList<HttpParameter>(),
-                            new ArrayList<HttpParameter>(),
-                            HttpConnection.GET,
-                            new OnServerResponse() {
-                                @Override
-                                public void ConexionExitosa(int codigoRespuesta, String respuesta) {
-                                    parseSentences(respuesta);
-                                }
+                    tale_id= bundle.getInt("tale_id",-1);
+                    author_id= bundle.getInt("author_id",-1);
 
-                                @Override
-                                public void ConexionFallida(int codigoRespuesta) {
-
-                                }
-
-                                @Override
-                                public void MalaParametrizacion() {
-
-                                }
-                            }
-
-                    );
-
-
-                    httpConnection.initDialog(getResources().getString(R.string.downloading_data), getResources().getString(R.string.may_take_few_seconds));
-                    httpConnection.setDialogCancelable(false);
-                    httpConnection.setShowDialog(true);
-                    httpConnection.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-                else
-                {
-                    sentenceAdapter.clear();
-                    calculateReaded(sentences);
-                    sentenceAdapter.addAll(sentences);
-                }
-
-                sentencesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Bundle b = new Bundle();
-                        b.putInt("sentence_id",((Sentence)(sentenceAdapter.getItem(position))).getId());
-                        b.putInt("tale_id",tale_id);
-                        b.putInt("author_id",author_id);
-                        b.putIntegerArrayList("sentences_ids", sentences_id);
-                        b.putStringArrayList("sentences_texts", sentences_texts);
-                        Log.i(TAG,"Sentence ID"+(((Sentence)(sentenceAdapter.getItem(position))).getId()));
-                        changeActivity(UploadTaleAudioData.class, b);
+                    if(tale_id>0)
+                    {
+                        arrayList = sentenceDAO.getSentencesByTaleId(tale_id);
+                        if(arrayList.isEmpty())
+                        {
+                            getDataFromServer();
+                        }
+                        else
+                        {
+                            sentences = arrayList;
+                            sentenceAdapter.clear();
+                            calculateReaded(sentences);
+                            sentenceAdapter.addAll(sentences);
+                        }
                     }
-                });
+                }
 
 
             }
@@ -167,26 +169,70 @@ public class SentencesList extends BaseActivity {
             JSONObject response= new JSONObject(json);
             if(response.getInt(Config.ERROR_TEXT)==0)
             {
-                JSONArray sentences = response.getJSONArray("sentences");
-                ArrayList<Sentence> sentencesList = new ArrayList<>();
-                sentenceAdapter.clear();
-//                int currentIndex = -1;
-//                boolean audioDataexists = false;
-                for(int i=0;i<sentences.length();i++)
-                {
-                    JSONObject jsonTale = sentences.getJSONObject(i);
-                    int sentenceId =jsonTale.getInt("id");
 
-                    Sentence new_sentence = new Sentence();
-                    new_sentence.setId(sentenceId);
-                    new_sentence.setTale_id(tale_id);
-                    new_sentence.setTale(jsonTale.getJSONObject("tale").getString("title"));
-                    new_sentence.setText(jsonTale.getString("text"));
-                    sentencesList.add(new_sentence);
-                    sentenceDAO.create(new_sentence);
-                    sentenceAdapter.add(new_sentence);
-                    sentences_id.add(jsonTale.getInt("id"));
-                    sentences_texts.add(jsonTale.getString("text"));
+                UpdateGUIAsync updateSentences = new UpdateGUIAsync(
+                        sentenceAdapter,
+                        sentenceDAO,
+                        response.getString("sentences"),
+                        new JSONParser() {
+                            @Override
+                            public ArrayList execute(ArrayAdapter adapter, String json, BaseDAO dao) {
+                                ArrayList arrayList = new ArrayList();
+                                try {
+                                    JSONArray sentences = new JSONArray(json);
+                                    ArrayList<Sentence> sentencesList = new ArrayList<>();
+                                    adapter.clear();
+                                    for (int i = 0; i < sentences.length(); i++) {
+                                        JSONObject jsonTale = sentences.getJSONObject(i);
+                                        int sentenceId = jsonTale.getInt("id");
+
+                                        Sentence new_sentence = new Sentence();
+                                        new_sentence.setId(sentenceId);
+                                        new_sentence.setTale_id(tale_id);
+                                        new_sentence.setTale(jsonTale.getJSONObject("tale").getString("title"));
+                                        new_sentence.setText(jsonTale.getString("text"));
+                                        sentencesList.add(new_sentence);
+                                        dao.create(new_sentence);
+                                        arrayList.add(new_sentence);
+                                        sentences_id.add(jsonTale.getInt("id"));
+                                        sentences_texts.add(jsonTale.getString("text"));
+
+                                        calculateReaded(sentencesList);
+
+                                    }
+                                }catch (JSONException jse)
+                                {
+                                    jse.printStackTrace();
+                                }
+                                return arrayList;
+                            }
+
+                        }
+                );
+
+                updateSentences.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                JSONArray sentences = response.getJSONArray("sentences");
+//                ArrayList<Sentence> sentencesList = new ArrayList<>();
+//                sentenceAdapter.clear();
+////                int currentIndex = -1;
+////                boolean audioDataexists = false;
+//                for(int i=0;i<sentences.length();i++)
+//                {
+//                    JSONObject jsonTale = sentences.getJSONObject(i);
+//                    int sentenceId =jsonTale.getInt("id");
+//
+//                    Sentence new_sentence = new Sentence();
+//                    new_sentence.setId(sentenceId);
+//                    new_sentence.setTale_id(tale_id);
+//                    new_sentence.setTale(jsonTale.getJSONObject("tale").getString("title"));
+//                    new_sentence.setText(jsonTale.getString("text"));
+//                    sentencesList.add(new_sentence);
+//                    sentenceDAO.create(new_sentence);
+//                    sentenceAdapter.add(new_sentence);
+//                    sentences_id.add(jsonTale.getInt("id"));
+//                    sentences_texts.add(jsonTale.getString("text"));
+//
+//                    calculateReaded(sentencesList);
 
 
 
@@ -235,9 +281,9 @@ public class SentencesList extends BaseActivity {
 //                    {
 //                        sentenceAdapter.addItemUploaded(false);
 //                    }
-                }
+//                }
 
-                calculateReaded(sentencesList);
+
 
                 sentenceAdapter.notifyDataSetChanged();
 
@@ -252,6 +298,39 @@ public class SentencesList extends BaseActivity {
         }
     }
 
+    private void getDataFromServer()
+    {
+        HttpConnection httpConnection = new HttpConnection(
+                SentencesList.this,
+                Config.BASE_URL + Config.API_BASE_URL + "/sentences/" + tale_id + "/",
+                new ArrayList<HttpParameter>(),
+                new ArrayList<HttpParameter>(),
+                HttpConnection.GET,
+                new OnServerResponse() {
+                    @Override
+                    public void ConexionExitosa(int codigoRespuesta, String respuesta) {
+                        parseSentences(respuesta);
+                    }
+
+                    @Override
+                    public void ConexionFallida(int codigoRespuesta) {
+
+                    }
+
+                    @Override
+                    public void MalaParametrizacion() {
+
+                    }
+                }
+
+        );
+
+
+        httpConnection.initDialog(getResources().getString(R.string.downloading_data), getResources().getString(R.string.may_take_few_seconds));
+        httpConnection.setDialogCancelable(false);
+        httpConnection.setShowDialog(true);
+        httpConnection.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
     private void calculateReaded(ArrayList<Sentence> sentences)
     {
