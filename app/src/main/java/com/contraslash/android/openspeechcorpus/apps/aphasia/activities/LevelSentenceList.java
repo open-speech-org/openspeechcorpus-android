@@ -123,8 +123,10 @@ public class LevelSentenceList extends BaseActivity {
             levelSentenceAdapter.notifyDataSetChanged();
             for(LevelSentence ls: levelSentences)
             {
-                sentences_ids.add(ls.getId());
+                sentences_ids.add(ls.get_id());
                 sentences_texts.add(ls.getText());
+                Log.i("TAG", "id: "+ls.get_id());
+                Log.i("TAG", "uploaded: "+ls.getUploaded());
             }
         }
 
@@ -134,7 +136,7 @@ public class LevelSentenceList extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle b = new Bundle();
                 LevelSentence sentence = (LevelSentence) levelSentenceAdapter.getItem(position);
-                b.putInt("sentence_id", sentence.getId());
+                b.putInt("sentence_id", sentence.get_id());
                 b.putString("text", sentence.getText());
                 b.putIntegerArrayList("sentences_ids", sentences_ids);
                 b.putStringArrayList("sentences_texts", sentences_texts);
@@ -198,10 +200,12 @@ public class LevelSentenceList extends BaseActivity {
                                 new_level_sentence.setId(jsonLevelSentence.getInt("id"));
                                 new_level_sentence.setLevel_category_id(level_category_id);
                                 new_level_sentence.setText(jsonLevelSentence.getString("text"));
+                                Log.i("Sentence","Adding new sentence with id " + new_level_sentence.getId());
+                                Log.i("Sentence","And text" + new_level_sentence.getText());
 
                                 dao.create(new_level_sentence);
                                 arrayList.add(new_level_sentence);
-                                sentences_ids.add(new_level_sentence.getId());
+                                sentences_ids.add(new_level_sentence.get_id());
                                 sentences_texts.add(new_level_sentence.getText());
                             }
                         }catch (JSONException jse)

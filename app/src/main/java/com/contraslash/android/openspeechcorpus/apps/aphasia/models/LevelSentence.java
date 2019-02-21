@@ -14,6 +14,11 @@ public class LevelSentence extends Table {
     int level_category_id;
     String text;
 
+    /**
+     * Int determinate state of record: 0 Not recorded, 1 Uploaded, 2 Skipped
+     */
+    int uploaded;
+
     public LevelSentence(){}
 
     public LevelSentence(int id, int level_category_id, String text) {
@@ -49,5 +54,13 @@ public class LevelSentence extends Table {
     @Override
     public String getTableName() {
         return TABLE_NAME;
+    }
+
+    public int getUploaded() {
+        return uploaded;
+    }
+
+    public void setUploaded(int uploaded) {
+        this.uploaded = uploaded;
     }
 }

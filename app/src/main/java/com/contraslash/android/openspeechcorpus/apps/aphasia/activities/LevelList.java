@@ -2,6 +2,7 @@ package com.contraslash.android.openspeechcorpus.apps.aphasia.activities;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -34,10 +35,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class LevelList extends BaseActivity {
 
     Toolbar toolbar;
+    SwipeRefreshLayout swipeRefreshLayout;
     ListView levelListView;
 
     LevelAdapter levelAdapter;
@@ -64,6 +68,15 @@ public class LevelList extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.level_list_refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(
+                getResources().getColor(android.R.color.holo_blue_bright),
+                getResources().getColor(android.R.color.holo_green_light),
+                getResources().getColor(android.R.color.holo_orange_light),
+                getResources().getColor(android.R.color.holo_red_light)
+        );
+
+
         levelListView = (ListView)findViewById(R.id.level_list_list_view);
         levelAdapter =  new LevelAdapter(this, R.layout.element_level, new ArrayList());
         levelListView.setAdapter(levelAdapter);
@@ -72,6 +85,15 @@ public class LevelList extends BaseActivity {
 
     @Override
     protected void loadEvents() {
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+//                getLevelsFromServer();
+                LevelList.this.swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         levelDAO = new LevelDAO(this);
         levels = levelDAO.all();
         if ( levels.isEmpty() )
@@ -84,6 +106,12 @@ public class LevelList extends BaseActivity {
             Log.i(TAG,"Levels NO is empty");
             Log.i(TAG,"Size is"+levels.size());
             levelAdapter.clear();
+            Collections.sort(levels, new Comparator<Level>() {
+                @Override
+                public int compare(Level s1, Level s2) {
+                    return s1.getTitle().compareToIgnoreCase(s2.getTitle());
+                }
+            });
             levelAdapter.addAll(levels);
             levelAdapter.notifyDataSetChanged();
         }
@@ -114,6 +142,13 @@ public class LevelList extends BaseActivity {
                     @Override
                     public void ConexionExitosa(int codigoRespuesta, String respuesta) {
                         parseLevels(respuesta);
+                        if (LevelList.this.swipeRefreshLayout != null)
+                        {
+                            if (LevelList.this.swipeRefreshLayout.isRefreshing())
+                            {
+                                LevelList.this.swipeRefreshLayout.setRefreshing(false);
+                            }
+                        }
                     }
 
                     @Override
@@ -164,6 +199,12 @@ public class LevelList extends BaseActivity {
                         {
                             jse.printStackTrace();
                         }
+                        Collections.sort(arrayList, new Comparator<Level>() {
+                            @Override
+                            public int compare(Level s1, Level s2) {
+                                return s1.getTitle().compareToIgnoreCase(s2.getTitle());
+                            }
+                        });
                         return arrayList;
                     }
                 });

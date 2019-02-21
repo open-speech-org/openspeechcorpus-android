@@ -24,7 +24,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 
     private String TAG = "SQLiteHelper";
     private static final String DATABASE_NAME = "openspeechcorpus.db";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 13;
 
 
     Table [] tables = {
@@ -65,12 +65,12 @@ public class SQLiteHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion)
     {
 
-//        for(Table table: tables)
-//        {
-//            String sentence = Utils.deleteTable(table);
-//            Log.i(TAG, sentence);
-//            database.execSQL(sentence);
-//        }
+        for(Table table: tables)
+        {
+            String sentence = Utils.deleteTable(table);
+            Log.i(TAG, sentence);
+            database.execSQL(sentence);
+        }
         onCreate(database);
         patches(database, oldVersion);
     }

@@ -17,10 +17,17 @@
         android:background="?attr/colorPrimary"
         app:theme="@style/ThemeOverlay.AppCompat.Light"
         />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/level_list_refresh_layout"
+        >
+
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/level_list_list_view"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

@@ -23,6 +23,8 @@ import com.contraslash.android.network.MultipartParameter;
 import com.contraslash.android.network.OnServerResponse;
 import com.contraslash.android.network.Util;
 import com.contraslash.android.openspeechcorpus.R;
+import com.contraslash.android.openspeechcorpus.apps.aphasia.models.LevelSentence;
+import com.contraslash.android.openspeechcorpus.apps.aphasia.models.LevelSentenceDAO;
 import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleAnimation;
 import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleView;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioData;
@@ -74,16 +76,15 @@ public class UploadWordAudioData extends BaseActivity {
     //End of GUI Elements
 
     AudioDataDAO audioDataDAO;
-    SentenceDAO sentenceDAO;
-    Sentence sentence;
-    TaleDAO taleDAO;
+    LevelSentenceDAO sentenceDAO;
+    LevelSentence sentence;
+
     ArrayList<AudioData> records;
     AudioData record;
 
     ArrayList<Integer> sentences_ids;
     ArrayList<String> sentences_texts;
     int author_id;
-    int tale_id;
     int sentence_id;
     String sentence_text;
 
@@ -99,8 +100,8 @@ public class UploadWordAudioData extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         audioDataDAO=new AudioDataDAO(this);
-        sentenceDAO=new SentenceDAO(this);
-        taleDAO=new TaleDAO(this);
+        sentenceDAO=new LevelSentenceDAO(this);
+//        taleDAO=new TaleDAO(this);
 
         current_id_index = 0;
 
@@ -110,18 +111,11 @@ public class UploadWordAudioData extends BaseActivity {
 
             Log.i(TAG,"Bundle not null");
             sentences_ids = bundle.getIntegerArrayList("sentences_ids");
-//            sentences_ids = new ArrayList<>();
-//            sentences_ids.add(0);
             sentence_id = bundle.getInt("sentence_id");
             sentence_text = bundle.getString("text");
-            Log.i(TAG, "SENTENCE ID"+sentence_id + "Text"+sentence_text);
-            Log.i(TAG,"SENTENCES IDS LENGTH: "+sentences_ids.size());
             sentences_texts = bundle.getStringArrayList("sentences_texts");
-//            sentences_texts = new ArrayList<>();
-//            sentences_texts.add(bundle.getString("text"));
-            Log.i(TAG,"SENTENCES TEXt LENGTH: "+sentences_texts.size());
+
             author_id = bundle.getInt("author_id", 0);
-            tale_id = bundle.getInt("tale_id", 0);
             sentence_id = bundle.getInt("sentence_id", 0);
             Log.i(TAG,"SENTENCES ID:"+sentence_id);
             for(int i=0;i<sentences_ids.size(); i++)
@@ -363,7 +357,7 @@ public class UploadWordAudioData extends BaseActivity {
                 use.printStackTrace();
             }
             ArrayList<HttpParameter> parameters = new ArrayList<>();
-            parameters.add(new HttpParameter("level_sentence_id", sentence_id + ""));
+            parameters.add(new HttpParameter("level_sentence_id", sentence.getId() + ""));
             parameters.add(new HttpParameter("text", encoded_text));
             if (getPreferences().getInt(Config.USER_ID, -1) > 0) {
                 parameters.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferences().getInt(Config.USER_ID, 1) + ""));
@@ -390,6 +384,7 @@ public class UploadWordAudioData extends BaseActivity {
                                     Toast.makeText(UploadWordAudioData.this, UploadWordAudioData.this.getResources().getString(R.string.upload_successful), Toast.LENGTH_SHORT).show();
                                     record.setUploaded(1);
                                     sentence.setUploaded(1);
+                                    Log.i(TAG, "setting uploadad to 1 in sentence " + sentence.get_id() + " And the recor id" + record.get_id());
                                     sentenceDAO.update(sentence);
                                     audioDataDAO.update(record);
                                     current_id_index += 1;
@@ -446,15 +441,19 @@ public class UploadWordAudioData extends BaseActivity {
 
         if(current_id_index > sentences_ids.size()-1)
         {
-            Toast.makeText(this, getString(R.string.tale_end), Toast.LENGTH_SHORT).show();
-            Tale tale = (Tale) taleDAO.read(tale_id);
-            tale.setReaded(1);
-            taleDAO.update(tale);
+            // This validates end of tale
+//            Toast.makeText(this, getString(R.string.tale_end), Toast.LENGTH_SHORT).show();
+//            Tale tale = (Tale) taleDAO.read(tale_id);
+//            tale.setReaded(1);
+//            taleDAO.update(tale);
             return;
         }
         record.setSentence_id(sentences_ids.get(current_id_index));
-        sentence  =  (Sentence) sentenceDAO.read(sentences_ids.get(current_id_index));
+        sentence_id = sentences_ids.get(current_id_index);
+        sentence  =  (LevelSentence) sentenceDAO.read(sentences_ids.get(current_id_index));
+        Log.i(TAG, "Sentence: id"+ sentence.get_id() + " ID: " + sentence.getId() +  " text: " + sentence.getText() );
         taleText.setText(sentences_texts.get(current_id_index));
+        sentence_text = sentences_texts.get(current_id_index);
         mFileName = dirPath + "/tale_" + record.getSentence_id() + ".mp4";
         record.setFileLocation(mFileName);
 
@@ -479,8 +478,6 @@ public class UploadWordAudioData extends BaseActivity {
     @Override
     public void onBackPressed() {
         Bundle b = new Bundle();
-        b.putInt("tale_id",tale_id);
-        b.putInt("author_id",author_id);
         changeActivity(LevelSentenceList.class, b);
     }
 }
