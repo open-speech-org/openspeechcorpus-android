@@ -9,11 +9,11 @@ public class Config {
 
     //Desarrollo
     //public static String BASE_URL = "http://192.168.0.101:8000";
-//    public static String BASE_URL = "http://192.168.1.123:8000";
+    public static String BASE_URL = "http://192.168.1.59:8000";
 
 
     //Produccion
-    public static String BASE_URL = "http://openspeechcorpus.contraslash.com";
+//    public static String BASE_URL = "http://openspeechcorpus.contraslash.com";
 
     public static String API_BASE_URL = "/api";
 

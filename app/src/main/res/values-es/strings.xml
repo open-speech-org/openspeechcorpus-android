@@ -95,6 +95,7 @@
     <string name="levels">Niveles</string>
     <string name="categories">Categorias</string>
     <string name="words">Palabras</string>
+    <string name="isolated_words">Palabras aisladas</string>
     <string name="downloading_data">Descargando Datos</string>
     <string name="title_activity_upload_tale_audio_data">Cuentos</string>
     <string name="title_activity_news_detail">Noticias</string>

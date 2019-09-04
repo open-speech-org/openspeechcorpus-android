@@ -1,7 +1,7 @@
 package com.contraslash.android.openspeechcorpus.apps.tales.activities;
 
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;

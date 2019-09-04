@@ -48,6 +48,7 @@ import com.contraslash.android.openspeechcorpus.apps.core.models.AudioDataDAO;
 import com.contraslash.android.openspeechcorpus.apps.core.utils.AudioDataComparator;
 import com.contraslash.android.openspeechcorpus.apps.history.activities.History;
 import com.contraslash.android.openspeechcorpus.apps.history.dialogs.EraseDialog;
+import com.contraslash.android.openspeechcorpus.apps.isolated_words.activities.CategoryList;
 import com.contraslash.android.openspeechcorpus.apps.miscellany.models.Command;
 import com.contraslash.android.openspeechcorpus.apps.miscellany.models.CommandDAO;
 import com.contraslash.android.openspeechcorpus.apps.news.activities.NewsDetail;
@@ -1182,6 +1183,9 @@ public class UploadAudioData extends BaseActivity implements
                 break;
             case R.id.menu_drawer_words:
                 changeActivity(LevelList.class);
+                break;
+            case R.id.menu_drawer_isolated_words:
+                changeActivity(CategoryList.class);
                 break;
             case R.id.menu_drawer_erase:
                 EraseDialog eraseDialog = new EraseDialog();

@@ -91,6 +91,7 @@
     <string name="levels">Levels</string>
     <string name="categories">Categories</string>
     <string name="words">Words</string>
+    <string name="isolated_words">Isolated Words</string>
     <string name="downloading_data">Downloading data</string>
     <string name="title_activity_upload_tale_audio_data">Upload Tale Audio Data</string>
     <string name="input_nick">We would like to know your name</string>
