@@ -4,7 +4,7 @@ import com.contraslash.android.openspeechcorpus.db.Table;
 
 public class IsolatedWord extends Table {
 
-    public static String TABLE_NAME = DB_PREFIX + "level_sentence";
+    public static String TABLE_NAME = DB_PREFIX + "isolated_word";
 
     int id;
     int category_id;

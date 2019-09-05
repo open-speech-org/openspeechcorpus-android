@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.contraslash.android.openspeechcorpus.R;
 import com.contraslash.android.openspeechcorpus.apps.aphasia.models.LevelSentence;
+import com.contraslash.android.openspeechcorpus.apps.isolated_words.models.IsolatedWord;
+import com.contraslash.android.openspeechcorpus.apps.isolated_words.models.IsolatedWordDAO;
 import com.contraslash.android.openspeechcorpus.base.BaseCustomAdapter;
 
 import java.util.List;
@@ -23,16 +25,16 @@ public class IsolatedWordAdapter extends BaseCustomAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
 
-        LevelSentence level = (LevelSentence) objects.get(position);
+        IsolatedWord isolatedWord = (IsolatedWord) objects.get(position);
         TextView text = view.findViewById(R.id.element_isolated_word_test);
         CardView cardView= view.findViewById(R.id.element_isolated_word_cardview);
-        text.setText(level.getText());
-        Log.i(TAG, level.get_id()+"");
-        Log.i(TAG, level.getText());
-        Log.i(TAG, level.getUploaded()+"");
+        text.setText(isolatedWord.getText());
+        Log.i(TAG, isolatedWord.get_id()+"");
+        Log.i(TAG, isolatedWord.getText());
+        Log.i(TAG, isolatedWord.getUploaded()+"");
         try {
 
-            if (level.getUploaded() == 1) {
+            if (isolatedWord.getUploaded() == 1) {
 //                try {
                 cardView.setBackgroundColor(context.getResources().getColor(R.color.teal));
 //                } catch (ClassCastException ccext) {

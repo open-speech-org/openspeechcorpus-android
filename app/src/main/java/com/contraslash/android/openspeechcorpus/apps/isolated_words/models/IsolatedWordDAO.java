@@ -16,7 +16,7 @@ public class IsolatedWordDAO extends BaseDAO {
 
     @Override
     protected String getTableName() {
-        return LevelSentence.TABLE_NAME;
+        return IsolatedWord.TABLE_NAME;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class IsolatedWordDAO extends BaseDAO {
 
     @Override
     protected Table getPrototype() {
-        return new LevelSentence();
+        return new IsolatedWord();
     }
 
     public ArrayList getWordsByCategoryId(int category_id)

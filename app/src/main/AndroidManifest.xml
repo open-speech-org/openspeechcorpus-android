@@ -161,7 +161,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.contraslash.android.openspeechcorpus.apps.aphasia.activities.LevelSentenceList" />
         </activity>
-        <activity android:name=".apps.isolated_words.activities.CategoryList"></activity>
+        <activity android:name=".apps.isolated_words.activities.CategoryList" />
+        <activity android:name=".apps.isolated_words.activities.IsolatedWordList" />
+        <activity android:name=".apps.isolated_words.activities.UploadIsolatedWordAudioData"></activity>
     </application>
 
 </manifest>

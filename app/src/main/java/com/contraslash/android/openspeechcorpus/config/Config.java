@@ -9,7 +9,7 @@ public class Config {
 
     //Desarrollo
     //public static String BASE_URL = "http://192.168.0.101:8000";
-    public static String BASE_URL = "http://192.168.1.59:8000";
+    public static String BASE_URL = "http://192.168.1.54:8000";
 
 
     //Produccion

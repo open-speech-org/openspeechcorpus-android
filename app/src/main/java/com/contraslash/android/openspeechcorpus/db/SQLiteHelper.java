@@ -10,6 +10,8 @@ import com.contraslash.android.openspeechcorpus.apps.aphasia.models.Level;
 import com.contraslash.android.openspeechcorpus.apps.aphasia.models.LevelCategory;
 import com.contraslash.android.openspeechcorpus.apps.aphasia.models.LevelSentence;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioData;
+import com.contraslash.android.openspeechcorpus.apps.isolated_words.models.Category;
+import com.contraslash.android.openspeechcorpus.apps.isolated_words.models.IsolatedWord;
 import com.contraslash.android.openspeechcorpus.apps.miscellany.models.Command;
 import com.contraslash.android.openspeechcorpus.apps.news.models.New;
 import com.contraslash.android.openspeechcorpus.apps.tales.models.Author;
@@ -36,7 +38,9 @@ public class SQLiteHelper extends SQLiteOpenHelper{
             new Command(),
             new Level(),
             new LevelCategory(),
-            new LevelSentence()
+            new LevelSentence(),
+            new Category(),
+            new IsolatedWord(),
     };
 
     // Database creation sql statement

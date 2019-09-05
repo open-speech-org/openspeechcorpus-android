@@ -13,7 +13,7 @@ public class CategoryDAO extends BaseDAO {
 
     @Override
     protected String getTableName() {
-        return Level.TABLE_NAME;
+        return Category.TABLE_NAME;
     }
 
     @Override

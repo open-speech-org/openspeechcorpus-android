@@ -1,10 +1,11 @@
-package com.contraslash.android.openspeechcorpus.apps.aphasia.activities;
+package com.contraslash.android.openspeechcorpus.apps.isolated_words.activities;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,17 +24,16 @@ import com.contraslash.android.network.MultipartParameter;
 import com.contraslash.android.network.OnServerResponse;
 import com.contraslash.android.network.Util;
 import com.contraslash.android.openspeechcorpus.R;
+import com.contraslash.android.openspeechcorpus.apps.aphasia.activities.LevelSentenceList;
+import com.contraslash.android.openspeechcorpus.apps.aphasia.activities.UploadWordAudioData;
 import com.contraslash.android.openspeechcorpus.apps.aphasia.models.LevelSentence;
 import com.contraslash.android.openspeechcorpus.apps.aphasia.models.LevelSentenceDAO;
 import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleAnimation;
 import com.contraslash.android.openspeechcorpus.apps.core.animations.CircleView;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioData;
 import com.contraslash.android.openspeechcorpus.apps.core.models.AudioDataDAO;
-import com.contraslash.android.openspeechcorpus.apps.tales.activities.SentencesList;
-import com.contraslash.android.openspeechcorpus.apps.tales.models.Sentence;
-import com.contraslash.android.openspeechcorpus.apps.tales.models.SentenceDAO;
-import com.contraslash.android.openspeechcorpus.apps.tales.models.Tale;
-import com.contraslash.android.openspeechcorpus.apps.tales.models.TaleDAO;
+import com.contraslash.android.openspeechcorpus.apps.isolated_words.models.IsolatedWord;
+import com.contraslash.android.openspeechcorpus.apps.isolated_words.models.IsolatedWordDAO;
 import com.contraslash.android.openspeechcorpus.base.BaseActivity;
 import com.contraslash.android.openspeechcorpus.config.Config;
 
@@ -46,7 +46,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class UploadWordAudioData extends BaseActivity {
+public class UploadIsolatedWordAudioData extends BaseActivity {
 
     //GUI Elemets
 
@@ -76,8 +76,8 @@ public class UploadWordAudioData extends BaseActivity {
     //End of GUI Elements
 
     AudioDataDAO audioDataDAO;
-    LevelSentenceDAO sentenceDAO;
-    LevelSentence sentence;
+    IsolatedWordDAO isolatedWordDAO;
+    IsolatedWord word;
 
     ArrayList<AudioData> records;
     AudioData record;
@@ -100,7 +100,7 @@ public class UploadWordAudioData extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         audioDataDAO=new AudioDataDAO(this);
-        sentenceDAO=new LevelSentenceDAO(this);
+        isolatedWordDAO=new IsolatedWordDAO(this);
 //        taleDAO=new TaleDAO(this);
 
         current_id_index = 0;
@@ -133,8 +133,6 @@ public class UploadWordAudioData extends BaseActivity {
         }
 
         configureRecord();
-
-
 
     }
 
@@ -197,9 +195,6 @@ public class UploadWordAudioData extends BaseActivity {
             Log.e(TAG, "prepare() failed");
             Toast.makeText(this, getResources().getString(R.string.failed_start_recording), Toast.LENGTH_SHORT).show();
         }
-
-
-
     }
 
     private void stopRecording() {
@@ -224,14 +219,12 @@ public class UploadWordAudioData extends BaseActivity {
 
     }
 
-
-    public UploadWordAudioData() {
+    public UploadIsolatedWordAudioData() {
         dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/openspeechcorpus/records";
         File dir = new File(dirPath);
         Log.i(TAG, dir.mkdirs() + "");
 
     }
-
 
     @Override
     public void onPause() {
@@ -357,7 +350,7 @@ public class UploadWordAudioData extends BaseActivity {
                 use.printStackTrace();
             }
             ArrayList<HttpParameter> parameters = new ArrayList<>();
-            parameters.add(new HttpParameter("level_sentence_id", sentence.getId() + ""));
+            parameters.add(new HttpParameter("level_sentence_id", word.getId() + ""));
             parameters.add(new HttpParameter("text", encoded_text));
             if (getPreferences().getInt(Config.USER_ID, -1) > 0) {
                 parameters.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferences().getInt(Config.USER_ID, 1) + ""));
@@ -369,7 +362,7 @@ public class UploadWordAudioData extends BaseActivity {
 
             HttpConnectionMultipart uploadAudio = new HttpConnectionMultipart(
                     this,
-                    Config.BASE_URL + Config.API_BASE_URL + "/words/upload/",
+                    Config.BASE_URL + Config.API_BASE_URL + "/isolated-words/upload/",
                     null,
                     parameters,
                     multiparPatameters,
@@ -381,18 +374,18 @@ public class UploadWordAudioData extends BaseActivity {
                                 int status = new JSONObject(respuesta).getInt("error");
                                 if(status == 0)
                                 {
-                                    Toast.makeText(UploadWordAudioData.this, UploadWordAudioData.this.getResources().getString(R.string.upload_successful), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(UploadIsolatedWordAudioData.this, UploadIsolatedWordAudioData.this.getResources().getString(R.string.upload_successful), Toast.LENGTH_SHORT).show();
                                     record.setUploaded(1);
-                                    sentence.setUploaded(1);
-                                    Log.i(TAG, "setting uploadad to 1 in sentence " + sentence.get_id() + " And the recor id" + record.get_id());
-                                    sentenceDAO.update(sentence);
+                                    word.setUploaded(1);
+                                    Log.i(TAG, "setting uploadad to 1 in sentence " + word.get_id() + " And the recor id" + record.get_id());
+                                    isolatedWordDAO.update(word);
                                     audioDataDAO.update(record);
                                     current_id_index += 1;
                                     configureRecord();
                                 }
                                 else
                                 {
-                                    Toast.makeText(UploadWordAudioData.this, UploadWordAudioData.this.getResources().getString(R.string.upload_failure), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(UploadIsolatedWordAudioData.this, UploadIsolatedWordAudioData.this.getResources().getString(R.string.upload_failure), Toast.LENGTH_SHORT).show();
                                 }
                             }
                             catch (JSONException jse)
@@ -404,7 +397,7 @@ public class UploadWordAudioData extends BaseActivity {
 
                         @Override
                         public void ConexionFallida(int codigoRespuesta) {
-                            new Util(UploadWordAudioData.this).mostrarErrores(codigoRespuesta);
+                            new Util(UploadIsolatedWordAudioData.this).mostrarErrores(codigoRespuesta);
                         }
 
                         @Override
@@ -425,7 +418,6 @@ public class UploadWordAudioData extends BaseActivity {
             Toast.makeText(this,getResources().getString(R.string.record_before_upload), Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void configureRecord()
     {
@@ -450,11 +442,11 @@ public class UploadWordAudioData extends BaseActivity {
         }
         record.setSentence_id(sentences_ids.get(current_id_index));
         sentence_id = sentences_ids.get(current_id_index);
-        sentence  =  (LevelSentence) sentenceDAO.read(sentences_ids.get(current_id_index));
-        Log.i(TAG, "Sentence: id"+ sentence.get_id() + " ID: " + sentence.getId() +  " text: " + sentence.getText() );
+        word  =  (IsolatedWord) isolatedWordDAO.read(sentences_ids.get(current_id_index));
+        Log.i(TAG, "Sentence: id"+ word.get_id() + " ID: " + word.getId() +  " text: " + word.getText() );
         taleText.setText(sentences_texts.get(current_id_index));
         sentence_text = sentences_texts.get(current_id_index);
-        mFileName = dirPath + "/word_" + record.getSentence_id() + ".mp4";
+        mFileName = dirPath + "/isolated_word_" + record.getSentence_id() + ".mp4";
         record.setFileLocation(mFileName);
 
         Log.i(TAG, mFileName);
@@ -463,7 +455,6 @@ public class UploadWordAudioData extends BaseActivity {
 
         this.record = record;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -478,6 +469,6 @@ public class UploadWordAudioData extends BaseActivity {
     @Override
     public void onBackPressed() {
         Bundle b = new Bundle();
-        changeActivity(LevelSentenceList.class, b);
+        changeActivity(IsolatedWordList.class, b);
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,7 @@ import com.contraslash.android.openspeechcorpus.apps.aphasia.activities.LevelLis
 import com.contraslash.android.openspeechcorpus.apps.aphasia.adapters.LevelAdapter;
 import com.contraslash.android.openspeechcorpus.apps.aphasia.models.Level;
 import com.contraslash.android.openspeechcorpus.apps.aphasia.models.LevelDAO;
+import com.contraslash.android.openspeechcorpus.apps.core.activities.UploadAudioData;
 import com.contraslash.android.openspeechcorpus.apps.isolated_words.adapters.CategoryAdapter;
 import com.contraslash.android.openspeechcorpus.apps.isolated_words.models.Category;
 import com.contraslash.android.openspeechcorpus.apps.isolated_words.models.CategoryDAO;
@@ -119,8 +121,8 @@ public class CategoryList extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle b = new Bundle();
-                b.putInt("level_id", ((Category) (categoryAdapter.getItem(position))).getId());
-                changeActivity(LevelCategoriesList.class, b);
+                b.putInt("category_id", ((Category) (categoryAdapter.getItem(position))).getId());
+                changeActivity(IsolatedWordList.class, b);
             }
         });
 
@@ -210,6 +212,23 @@ public class CategoryList extends BaseActivity {
 
         categoryAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Bundle b = new Bundle();
+        changeActivity(UploadAudioData.class, b);
     }
 
 }
