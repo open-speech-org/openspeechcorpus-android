@@ -6,6 +6,7 @@
     <string name="action_settings">Configuraciones</string>
 
     <string name="record">Grabar</string>
+    <string name="cant_record_message">No se puede grabar, por favor otorgue permisos de grabación a la aplicación</string>
     <string name="recording">Grabando</string>
     <string name="stop">Parar</string>
     <string name="play">Reproducir</string>

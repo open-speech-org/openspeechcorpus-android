@@ -1,9 +1,13 @@
 package com.contraslash.android.openspeechcorpus.apps.isolated_words.activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -94,6 +98,7 @@ public class UploadIsolatedWordAudioData extends BaseActivity {
 
 
     boolean canUpload = false;
+    boolean canRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +139,58 @@ public class UploadIsolatedWordAudioData extends BaseActivity {
 
         configureRecord();
 
+        // Check for permissions
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.RECORD_AUDIO)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{
+                                Manifest.permission.RECORD_AUDIO,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        },
+                        Config.PERMISSION_TO_RECORD_AUDIO);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            canRecord = true;
+        }
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case Config.PERMISSION_TO_RECORD_AUDIO: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    canRecord = true;
+                } else {
+                    canRecord = false;
+                    Toast.makeText(this, getString(R.string.cant_record_message), Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
     }
 
     @Override
@@ -180,6 +237,10 @@ public class UploadIsolatedWordAudioData extends BaseActivity {
     }
 
     private void startRecording() {
+        if (!canRecord){
+            Toast.makeText(this, getString(R.string.cant_record_message), Toast.LENGTH_LONG).show();
+            return;
+        }
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -350,7 +411,7 @@ public class UploadIsolatedWordAudioData extends BaseActivity {
                 use.printStackTrace();
             }
             ArrayList<HttpParameter> parameters = new ArrayList<>();
-            parameters.add(new HttpParameter("level_sentence_id", word.getId() + ""));
+            parameters.add(new HttpParameter("isolated_word_id", word.getId() + ""));
             parameters.add(new HttpParameter("text", encoded_text));
             if (getPreferences().getInt(Config.USER_ID, -1) > 0) {
                 parameters.add(new HttpParameter(Config.ANONYMOUS_USER, getPreferences().getInt(Config.USER_ID, 1) + ""));

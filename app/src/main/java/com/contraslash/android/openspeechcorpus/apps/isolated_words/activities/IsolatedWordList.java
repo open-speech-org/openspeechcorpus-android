@@ -195,7 +195,7 @@ public class IsolatedWordList extends BaseActivity {
                                 new_word.set_category_id(category_id);
                                 new_word.setText(jsonWord.getString("text"));
                                 Log.i("Isolated Word","Adding new sentence with id " + new_word.getId());
-                                Log.i("Isolated Word","And text" + new_word.getText());
+                                Log.i("Isolated Word","And text: " + new_word.getText());
 
                                 dao.create(new_word);
                                 arrayList.add(new_word);

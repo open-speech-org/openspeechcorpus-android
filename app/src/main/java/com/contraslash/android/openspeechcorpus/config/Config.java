@@ -9,7 +9,7 @@ public class Config {
 
     //Desarrollo
     //public static String BASE_URL = "http://192.168.0.101:8000";
-    public static String BASE_URL = "http://192.168.1.54:8000";
+    public static String BASE_URL = "http://192.168.1.59:8000";
 
 
     //Produccion
@@ -66,6 +66,8 @@ public class Config {
     public static String NEWS_LAST_UPDATE = "news_last_update";
 
     public static String CAPTURE_TALES_READED = "capture_tales_readed";
+
+    public static final int PERMISSION_TO_RECORD_AUDIO = 5809;
 
 
 }
