@@ -10,8 +10,8 @@ android {
         applicationId "com.contraslash.android.openspeechcorpus"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 22
-        versionName "2.4.3"
+        versionCode 24
+        versionName "3.0.1"
     }
     buildTypes {
         release {
